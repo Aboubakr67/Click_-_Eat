@@ -34,23 +34,32 @@ CREATE TABLE FORMULES (
 CREATE TABLE COMMANDES (
     id INT AUTO_INCREMENT PRIMARY KEY,
     created_at DATETIME NOT NULL,
-    statut ENUM('EN COURS', 'PRETE', 'PAYEE',"DISTRIBUE") NOT NULL,
+    statut ENUM('EN COURS', 'PRETE', 'PAYEE', 'DISTRIBUE') NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     paiement_method ENUM('CB', 'ESPECE') NOT NULL,
     code_commande VARCHAR(10) UNIQUE NOT NULL
 );
 
+CREATE TABLE PLAT_PERSONNALISE (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    commande_id INT NOT NULL,
+    plat_id INT NOT NULL,      
+    ingredient_id INT NULL,    
+    action ENUM('AJOUT', 'SUPPRESSION') NOT NULL,
+    prix_supplément DECIMAL(10, 2) DEFAULT 0,  
+    FOREIGN KEY (commande_id) REFERENCES COMMANDES(id),
+    FOREIGN KEY (plat_id) REFERENCES PLATS(id),
+    FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(id)
+);
 
 CREATE TABLE PLAT_INGREDIENT (
     id INT AUTO_INCREMENT PRIMARY KEY,
     plat_id INT NOT NULL,
     ingredient_id INT NOT NULL,
-    quantite INT NOT NULL,  -- Quantité de l'ingrédient pour le plat
+    quantite INT NOT NULL,  
     FOREIGN KEY (plat_id) REFERENCES PLATS(id),
     FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(id)
 );
-
-
 
 CREATE TABLE FORMULE_PLAT (
     id INT AUTO_INCREMENT PRIMARY KEY,
