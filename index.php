@@ -1,18 +1,9 @@
 <?php
-include "Actions/Databases.php"
+require('HeaderFooter/Client/Header.php');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<h1>Accueil client</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <h1>Test</h1>
-</body>
-
-</html>
+<?php
+require('HeaderFooter/Client/Footer.php');
+?>

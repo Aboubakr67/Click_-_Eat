@@ -1,4 +1,6 @@
-<?php session_start(); ?>
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,23 +38,17 @@
 <body>
     <header>
         <nav>
-            <?php if (isset($_SESSION['AUTH'])): ?>
-                <?php if ($_SESSION['ROLE'] === 'A'): ?>
-                    <a href="">Dashboard A</a>
-                    <a href="">Profil A</a>
-                    <a href="">Action A</a>
-                <?php elseif ($_SESSION['ROLE'] === 'B'): ?>
-                    <a href="">Dashboard B</a>
-                    <a href="">Profil B</a>
-                    <a href="">Action B</a>
-                <?php elseif ($_SESSION['ROLE'] === 'C'): ?>
-                    <a href="">Dashboard C</a>
-                    <a href="">Profil C</a>
-                    <a href="">Action C</a>
+            <?php if (isset($_SESSION['auth'])): ?>
+                <?php if ($_SESSION['role'] === 'ZONE CUISINE'): ?>
+                    <a href="../Admin/zone_cuisine.php">Zone cuisine</a>
+                <?php elseif ($_SESSION['role'] === 'ZONE STOCK'): ?>
+                    <a href="../Admin/zone_stock.php">Zone stock</a>
+                <?php elseif ($_SESSION['role'] === 'ZONE MANAGEMENT'): ?>
+                    <a href="../Admin/zone_admin.php">Zone admin</a>
                 <?php endif; ?>
                 <a href="../Actions/Deconnexion.php" class="logout">Déconnexion</a>
             <?php else: ?>
-                <a href="">Connexion</a>
+                <a href="../Admin/connexion.php">Se connecter</a>
             <?php endif; ?>
         </nav>
     </header>

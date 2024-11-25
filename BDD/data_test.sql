@@ -1,10 +1,10 @@
 USE click_and_eat;
 
 -- Insertion des utilisateurs (administrateurs)
-INSERT INTO USERS (nom, prenom, role, mot_de_passe) VALUES
-('Dupont', 'Jean', 'ZONE CUISINE', 'password123'),
-('Martin', 'Claire', 'ZONE STOCK', 'password123'),
-('Lemoine', 'Pierre', 'ZONE MANAGEMENT', 'password123');
+INSERT INTO USERS (nom, prenom, role, email, mot_de_passe) VALUES
+('Dupont', 'Jean', 'ZONE CUISINE', 'dj@gmail.com',  '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le'),
+('Martin', 'Claire', 'ZONE STOCK','mc@gmail.com', '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le'),
+('Lemoine', 'Pierre', 'ZONE MANAGEMENT', 'lp@gmail.com', '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le');
 
 -- Insertion des ingrédients
 INSERT INTO INGREDIENTS (nom) VALUES
