@@ -5,7 +5,7 @@ function connexion()
     $serveur = 'localhost';
     $utilisateur = 'root';
     $mot_de_passe = 'root';
-    $bdd = 'click_&_eat';
+    $bdd = 'click_and_eat';
     $port = 3308; // a changer
 
     try {
