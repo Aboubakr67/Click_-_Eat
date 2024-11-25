@@ -5,7 +5,7 @@ function connexion()
     $serveur = 'localhost';
     $utilisateur = 'root';
     $mot_de_passe = 'root';
-    $bdd = 'fastfood';
+    $bdd = 'click_&_eat';
     $port = 3308; // a changer
 
     try {
@@ -22,9 +22,18 @@ function connexion()
         // Création de la connexion PDO
         $connexion = new PDO($conn, $utilisateur, $mot_de_passe, $options);
 
+        // if ($connexion) {
+        //     echo "connexion !";
+        // } else {
+        //     echo "non connecté !";
+        // }
+
         return $connexion;
     } catch (PDOException $e) {
         // Gestion des erreurs de connexion
         die("Erreur de connexion à la base de données : " . $e->getMessage());
     }
 }
+
+
+connexion();
