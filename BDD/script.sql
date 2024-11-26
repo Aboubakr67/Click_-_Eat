@@ -2,8 +2,8 @@ DROP DATABASE IF EXISTS click_and_eat;
 CREATE DATABASE click_and_eat;
 USE click_and_eat;
 
-
-CREATE TABLE USERS (
+-- Création des tables (modèle déjà validé)
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
     prenom VARCHAR(255) NOT NULL,
@@ -12,27 +12,27 @@ CREATE TABLE USERS (
     mot_de_passe VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE PLATS (
+CREATE TABLE plats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
     image VARCHAR(255) NOT NULL,
     prix DECIMAL(10, 2) NOT NULL,
-    type ENUM('ENTREE', 'PLAT', 'DESSERT', 'BOISSON') NOT NULL,
-    ingredients TEXT NOT NULL
+    type ENUM('ENTREE', 'PLAT', 'DESSERT', 'BOISSON') NOT NULL
 );
 
-CREATE TABLE INGREDIENTS (
+CREATE TABLE ingredients (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(255) NOT NULL
+    nom VARCHAR(255) NOT NULL,
+    quantite INT DEFAULT 0
 );
 
-CREATE TABLE FORMULES (
+CREATE TABLE formules (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
     prix DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE COMMANDES (
+CREATE TABLE commandes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     created_at DATETIME NOT NULL,
     statut ENUM('EN COURS', 'PRETE', 'PAYEE', 'DISTRIBUE') NOT NULL,
@@ -41,44 +41,35 @@ CREATE TABLE COMMANDES (
     code_commande VARCHAR(10) UNIQUE NOT NULL
 );
 
-CREATE TABLE PLAT_PERSONNALISE (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE contenu_commande (
     commande_id INT NOT NULL,
-    plat_id INT NOT NULL,      
-    ingredient_id INT NULL,    
-    action ENUM('AJOUT', 'SUPPRESSION') NOT NULL,
-    prix_supplément DECIMAL(10, 2) DEFAULT 0,  
-    FOREIGN KEY (commande_id) REFERENCES COMMANDES(id),
-    FOREIGN KEY (plat_id) REFERENCES PLATS(id),
-    FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(id)
-);
-
-CREATE TABLE PLAT_INGREDIENT (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     plat_id INT NOT NULL,
-    ingredient_id INT NOT NULL,
-    quantite INT NOT NULL,  
-    FOREIGN KEY (plat_id) REFERENCES PLATS(id),
-    FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(id)
+    quantite INT DEFAULT 1,
+    modifications TEXT DEFAULT NULL,
+    prix_supplément DECIMAL(10, 2) DEFAULT 0,
+    PRIMARY KEY(commande_id, plat_id),
+    FOREIGN KEY (commande_id) REFERENCES commandes(id),
+    FOREIGN KEY (plat_id) REFERENCES plats(id)
 );
 
-CREATE TABLE FORMULE_PLAT (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    formule_id INT NOT NULL,
+CREATE TABLE plat_ingredient (
     plat_id INT NOT NULL,
-    FOREIGN KEY (formule_id) REFERENCES FORMULES(id),
-    FOREIGN KEY (plat_id) REFERENCES PLATS(id)
-);
-
-CREATE TABLE STOCKS (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     ingredient_id INT NOT NULL,
     quantite INT NOT NULL,
-    updated_at DATETIME NOT NULL,
-    FOREIGN KEY (ingredient_id) REFERENCES INGREDIENTS(id)
+    PRIMARY KEY(ingredient_id, plat_id),
+    FOREIGN KEY (plat_id) REFERENCES plats(id),
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
 );
 
-CREATE TABLE IMPORTS_STOCKS (
+CREATE TABLE formule_plat (
+    formule_id INT NOT NULL,
+    plat_id INT NOT NULL,
+    PRIMARY KEY(formule_id, plat_id),
+    FOREIGN KEY (formule_id) REFERENCES formules(id),
+    FOREIGN KEY (plat_id) REFERENCES plats(id)
+);
+
+CREATE TABLE imports_stocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     created_at DATETIME NOT NULL,
     fichier_csv VARCHAR(255) NOT NULL

@@ -1,68 +1,70 @@
 USE click_and_eat;
 
 -- Insertion des utilisateurs (administrateurs)
-INSERT INTO USERS (nom, prenom, role, email, mot_de_passe) VALUES
+INSERT INTO users (nom, prenom, role, email, mot_de_passe) VALUES
 ('Dupont', 'Jean', 'ZONE CUISINE', 'dj@gmail.com',  '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le'),
 ('Martin', 'Claire', 'ZONE STOCK','mc@gmail.com', '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le'),
 ('Lemoine', 'Pierre', 'ZONE MANAGEMENT', 'lp@gmail.com', '$2y$10$YT7rGiEXq.7xTxZ0Uk/dy.KbLhWIxkQd1AbivyUJGZKA3zR5Da1Le');
 
--- Insertion des ingrédients
-INSERT INTO INGREDIENTS (nom) VALUES
-('Tomate'),
-('Laitue'),
-('Oignon'),
-('Fromage'),
-('Steak'),
-('Poulet'),
-('Pain'),
-('Frites'),
-('Salade'),
-('Sauce Ketchup');
 
--- Insertion des plats
-INSERT INTO PLATS (nom, image, prix, type, ingredients) VALUES
-('Burger Classique', 'burger.jpg', 5.99, 'PLAT', '1,2,3,4,7'),
-('Salade César', 'salade.jpg', 6.50, 'PLAT', '2,10'),
-('Poulet Grillé', 'poulet.jpg', 7.99, 'PLAT', '6,7'),
-('Frites', 'frites.jpg', 2.00, 'BOISSON', '8'),
-('Boisson Cola', 'cola.jpg', 1.50, 'BOISSON', '9');
+-- Insérer des utilisateurs
+INSERT INTO users (nom, prenom, role, email, mot_de_passe) VALUES
+('Durand', 'Jean', 'ZONE CUISINE', 'jean.durand@example.com', 'password1'),
+('Lemoine', 'Sophie', 'ZONE STOCK', 'sophie.lemoine@example.com', 'password2'),
+('Martin', 'Alice', 'ZONE MANAGEMENT', 'alice.martin@example.com', 'password3');
 
--- Insertion des formules
-INSERT INTO FORMULES (nom, prix) VALUES
-('Formule Burger Classique', 8.50),
-('Formule Salade César', 9.50);
+-- Insérer des ingrédients
+INSERT INTO ingredients (nom, quantite) VALUES
+('Tomate', 100),
+('Champignon', 80),
+('Poulet', 50),
+('Fromage', 60),
+('Salade', 40),
+('Oignon', 30);
 
--- Insertion des relations entre formules et plats
-INSERT INTO FORMULE_PLAT (formule_id, plat_id) VALUES
-(1, 1),  -- Formule Burger Classique inclut le Burger Classique
-(1, 4),  -- Formule Burger Classique inclut les Frites
-(2, 2),  -- Formule Salade César inclut la Salade César
-(2, 4);  -- Formule Salade César inclut les Frites
+-- Insérer des plats
+INSERT INTO plats (nom, image, prix, type) VALUES
+('Salade César', 'salade_cesar.jpg', 8.50, 'ENTREE'),
+('Pizza Margherita', 'pizza_margherita.jpg', 12.00, 'PLAT'),
+('Poulet Rôti', 'poulet_roti.jpg', 15.00, 'PLAT'),
+('Tarte aux Pommes', 'tarte_pommes.jpg', 5.50, 'DESSERT'),
+('Coca-Cola', 'coca_cola.jpg', 3.00, 'BOISSON');
 
--- Insertion des commandes
-INSERT INTO COMMANDES (created_at, statut, total, paiement_method, code_commande) VALUES
-('2024-11-25 12:00:00', 'EN COURS', 10.50, 'CB', 'CB01'),
-('2024-11-25 12:30:00', 'PRETE', 7.99, 'ESPECE', 'ESP25');
+-- Associer des ingrédients aux plats
+INSERT INTO plat_ingredient (plat_id, ingredient_id, quantite) VALUES
+(1, 1, 10), -- Salade César : Tomate
+(1, 5, 20), -- Salade César : Salade
+(2, 1, 5), -- Pizza Margherita : Tomate
+(2, 4, 15), -- Pizza Margherita : Fromage
+(3, 3, 25), -- Poulet Rôti : Poulet
+(4, 1, 5), -- Tarte aux Pommes : Tomate
+(4, 6, 10); -- Tarte aux Pommes : Oignon
 
--- Insertion des personnalisations de plats
-INSERT INTO PLAT_PERSONNALISE (commande_id, plat_id, ingredient_id, action, prix_supplément) VALUES
-(1, 1, 4, 'AJOUT', 1.50),  -- Ajouter du fromage au Burger Classique
-(1, 1, 3, 'SUPPRESSION', 0),  -- Supprimer l'oignon du Burger Classique
-(2, 2, 10, 'SUPPRESSION', 0);  -- Supprimer la sauce Ketchup de la Salade César
+-- Insérer des formules
+INSERT INTO formules (nom, prix) VALUES
+('Menu Entrée + Plat', 18.00),
+('Menu Plat + Dessert', 20.00);
 
--- Insertion des stocks d'ingrédients
-INSERT INTO STOCKS (ingredient_id, quantite, updated_at) VALUES
-(1, 50, '2024-11-25 10:00:00'),  -- Tomates en stock
-(2, 30, '2024-11-25 10:00:00'),  -- Laitue en stock
-(3, 20, '2024-11-25 10:00:00'),  -- Oignon en stock
-(4, 25, '2024-11-25 10:00:00'),  -- Fromage en stock
-(5, 40, '2024-11-25 10:00:00'),  -- Steak en stock
-(6, 35, '2024-11-25 10:00:00'),  -- Poulet en stock
-(7, 60, '2024-11-25 10:00:00'),  -- Pain en stock
-(8, 80, '2024-11-25 10:00:00'),  -- Frites en stock
-(9, 100, '2024-11-25 10:00:00'), -- Salade en stock
-(10, 75, '2024-11-25 10:00:00'); -- Sauce Ketchup en stock
+-- Associer des plats aux formules
+INSERT INTO formule_plat (formule_id, plat_id) VALUES
+(1, 1), -- Menu Entrée + Plat : Salade César
+(1, 2), -- Menu Entrée + Plat : Pizza Margherita
+(2, 2), -- Menu Plat + Dessert : Pizza Margherita
+(2, 4); -- Menu Plat + Dessert : Tarte aux Pommes
 
--- Insertion des imports de stocks
-INSERT INTO IMPORTS_STOCKS (created_at, fichier_csv) VALUES
-('2024-11-25 09:00:00', 'import_fichier.csv');
+-- Insérer des commandes
+INSERT INTO commandes (created_at, statut, total, paiement_method, code_commande) VALUES
+('2024-11-26 12:00:00', 'EN COURS', 36.00, 'CB', 'CMD12345'),
+('2024-11-26 13:00:00', 'PAYEE', 20.00, 'ESPECE', 'CMD12346');
+
+-- Associer des plats aux commandes avec des modifications
+INSERT INTO contenu_commande (commande_id, plat_id, quantite, modifications, prix_supplément) VALUES
+(1, 1, 2, '{"ajouts":["Poulet"],"suppression":["Tomate"]}', 2.00), -- Salade César, modifiée
+(1, 2, 1, NULL, 0.00), -- Pizza Margherita, sans modification
+(2, 2, 1, '{"ajouts":["Champignon"]}', 1.50); -- Pizza Margherita, ajout champignons
+
+-- Insérer des entrées pour le suivi des stocks
+INSERT INTO imports_stocks (created_at, fichier_csv) VALUES
+('2024-11-25 08:00:00', 'stocks_25_11.csv'),
+('2024-11-26 08:00:00', 'stocks_26_11.csv');
+
