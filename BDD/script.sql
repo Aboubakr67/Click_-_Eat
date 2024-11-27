@@ -42,12 +42,12 @@ CREATE TABLE commandes (
 );
 
 CREATE TABLE contenu_commande (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     commande_id INT NOT NULL,
     plat_id INT NOT NULL,
     quantite INT DEFAULT 1,
     modifications TEXT DEFAULT NULL,
     prix_supplément DECIMAL(10, 2) DEFAULT 0,
-    PRIMARY KEY(commande_id, plat_id),
     FOREIGN KEY (commande_id) REFERENCES commandes(id),
     FOREIGN KEY (plat_id) REFERENCES plats(id)
 );
@@ -67,6 +67,14 @@ CREATE TABLE formule_plat (
     PRIMARY KEY(formule_id, plat_id),
     FOREIGN KEY (formule_id) REFERENCES formules(id),
     FOREIGN KEY (plat_id) REFERENCES plats(id)
+);
+
+CREATE TABLE historique_ingredients_utilisee (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ingredient_id INT NOT NULL,
+    date_utilisee DATETIME NOT NULL,
+    quantite INT NOT NULL,
+    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
 );
 
 CREATE TABLE imports_stocks (

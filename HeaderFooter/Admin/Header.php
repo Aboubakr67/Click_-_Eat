@@ -45,8 +45,10 @@ session_start();
                 <?php elseif ($_SESSION['role'] === 'ZONE STOCK'): ?>
                     <a href="../Admin/zone_stock.php">Zone stock</a>
                 <?php elseif ($_SESSION['role'] === 'ZONE MANAGEMENT'): ?>
-                    <a href="../Admin/zone_admin.php">Zone admin</a>
+                    <a href="../Admin/zone_admin.php">Dashboard</a>
+                    <a href="../Admin/liste_utilisateurs.php">Liste des utilisateurs</a>
                 <?php endif; ?>
+                <p>Connecté en tant que : <?php echo $_SESSION['nom'] . ' ' . $_SESSION['prenom'] ?></p>
                 <a href="../Actions/Deconnexion.php" class="logout">Déconnexion</a>
             <?php else: ?>
                 <a href="../Admin/connexion.php">Se connecter</a>

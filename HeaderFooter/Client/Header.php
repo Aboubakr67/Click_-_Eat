@@ -15,12 +15,11 @@
         <nav>
             <div>
                 <ul>
-                    <li><a href="">MENUS</a></li>
-                    <li><a href="">ENTREES</a></li>
-                    <li><a href="">PLATS</a></li>
-                    <li><a href="">DESSERTS</a></li>
-                    <li><a href="">BOISSONS</a></li>
-
+                    <li><a href="../Client/formules.php">MENUS</a></li>
+                    <li><a href="../Client/entrees.php">ENTREES</a></li>
+                    <li><a href="../Client/plats_resistance.php">PLATS</a></li>
+                    <li><a href="../Client/desserts.php">DESSERTS</a></li>
+                    <li><a href="../Client/boissons.php">BOISSONS</a></li>
                 </ul>
             </div>
         </nav>

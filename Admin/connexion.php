@@ -38,6 +38,7 @@ if (isset($_POST['validate'])) {
             $_SESSION['id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['nom'] = $user['nom'];
+            $_SESSION['prenom'] = $user['prenom'];
             $_SESSION['role'] = $user['role'];
 
 
