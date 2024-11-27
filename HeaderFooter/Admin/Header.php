@@ -44,7 +44,25 @@
                 <img src="../../Assets/images/salade.png" alt="Salade" class="w-12 h-12 mb-2">
                 <span>Salade</span>
             </a>
+<div>
+    <header>
+        <nav>
+            <?php if (isset($_SESSION['auth'])): ?>
+                <?php if ($_SESSION['role'] === 'ZONE CUISINE'): ?>
+                    <a href="../Admin/zone_cuisine.php">Zone cuisine</a>
+                <?php elseif ($_SESSION['role'] === 'ZONE STOCK'): ?>
+                    <a href="../Admin/zone_stock.php">Zone stock</a>
+                <?php elseif ($_SESSION['role'] === 'ZONE MANAGEMENT'): ?>
+                    <a href="../Admin/zone_admin.php">Dashboard</a>
+                    <a href="../Admin/liste_utilisateurs.php">Liste des utilisateurs</a>
+                    <a href="../Admin/liste_plats.php">Liste des plats</a>
+                <?php endif; ?>
+                <p>Connecté en tant que : <?php echo $_SESSION['nom'] . ' ' . $_SESSION['prenom'] ?></p>
+                <a href="../Actions/Deconnexion.php" class="logout">Déconnexion</a>
+            <?php else: ?>
+                <a href="../Admin/connexion.php">Se connecter</a>
+            <?php endif; ?>
         </nav>
     </header>
-</body>
+</div>
 </html>

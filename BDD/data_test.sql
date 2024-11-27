@@ -25,17 +25,17 @@ INSERT INTO plats (nom, image, prix, type) VALUES
 ('Cocktail Maison', 'cocktail_maison.jpg', 7.00, 'BOISSON'); -- Boisson dans Menu Premium
 
 -- Insertion des ingrédients dans `ingredients`
-INSERT INTO ingredients (nom, quantite) VALUES
-('Poulet', 100), -- Utilisé dans plusieurs plats
-('Tomate', 150), -- Utilisé pour les salades et burgers
-('Fromage', 120), -- Fromage pour burgers et autres plats
-('Laitue', 80), -- Laitue pour salades et burgers
-('Oignons', 60), -- Oignons pour burgers
-('Saumon', 50), -- Saumon pour le plat Steak de Saumon
-('Chocolat', 70), -- Chocolat pour les desserts
-('Pomme', 50), -- Pommes pour la tarte
-('Biscuit', 40), -- Base pour cheesecake
-('Crème', 90); -- Crème pour plusieurs desserts
+INSERT INTO ingredients (nom, image, quantite) VALUES
+('Poulet', 'poulet.jpg', 100), -- Utilisé dans plusieurs plats
+('Tomate', 'tomate.jpg', 150), -- Utilisé pour les salades et burgers
+('Fromage', 'fromage.jpg', 120), -- Fromage pour burgers et autres plats
+('Laitue', 'laitue.jpg', 80), -- Laitue pour salades et burgers
+('Oignons', 'oignons.jpg', 60), -- Oignons pour burgers
+('Saumon', 'saumon.jpg', 50), -- Saumon pour le plat Steak de Saumon
+('Chocolat', 'chocolat.jpg', 70), -- Chocolat pour les desserts
+('Pomme', 'pomme.jpg', 50), -- Pommes pour la tarte
+('Biscuit', 'biscuit.jpg', 40), -- Base pour cheesecake
+('Crème', 'creme.jpg', 90); -- Crème pour plusieurs desserts
 
 -- Insertion des formules dans `formules`
 INSERT INTO formules (nom, prix) VALUES
