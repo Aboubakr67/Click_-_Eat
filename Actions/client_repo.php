@@ -82,3 +82,40 @@ function getSupplementIngredients()
         return [];
     }
 }
+
+
+function getAllAccompagnementFromFormule()
+{
+    try {
+        $con = connexion();
+
+        $query = "
+            SELECT *
+            FROM plats
+            WHERE type = 'ENTREE'
+        ";
+        $stmt = $con->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+        return [];
+    }
+}
+
+function getAllBoissons()
+{
+    try {
+        $con = connexion();
+        $query = "
+            SELECT *
+            FROM plats
+            WHERE type = 'BOISSON'
+        ";
+        $stmt = $con->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+        return [];
+    }
+}
+
