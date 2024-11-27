@@ -23,6 +23,7 @@ CREATE TABLE plats (
 CREATE TABLE ingredients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
+    image VARCHAR(255) NOT NULL,
     quantite INT DEFAULT 0
 );
 
@@ -55,7 +56,7 @@ CREATE TABLE contenu_commande (
 CREATE TABLE plat_ingredient (
     plat_id INT NOT NULL,
     ingredient_id INT NOT NULL,
-    quantite INT NOT NULL,
+    quantite INT NULL DEFAULT 1,
     PRIMARY KEY(ingredient_id, plat_id),
     FOREIGN KEY (plat_id) REFERENCES plats(id),
     FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
