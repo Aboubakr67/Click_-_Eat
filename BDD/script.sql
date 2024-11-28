@@ -40,7 +40,9 @@ CREATE TABLE commandes (
     statut ENUM('EN COURS', 'PRETE', 'PAYEE', 'DISTRIBUE') NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     paiement_method ENUM('CB', 'ESPECE') NOT NULL,
-    code_commande VARCHAR(10) UNIQUE NOT NULL
+    code_commande VARCHAR(10) UNIQUE NOT NULL,
+    date_prete DATETIME NULL,
+    employe INT NULL
 );
 
 CREATE TABLE contenu_commande (

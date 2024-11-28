@@ -12,7 +12,7 @@ require("../Actions/zone_cuisine_repo.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['commande_id'])) {
     $commandeId = (int)$_POST['commande_id'];
-    if (setCommandePrete($commandeId)) {
+    if (setCommandePrete($commandeId, $_SESSION['id'])) {
         $message = "La commande a été marquée comme prête.";
     } else {
         $error = "Erreur lors de la mise à jour de la commande.";
