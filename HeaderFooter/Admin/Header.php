@@ -48,6 +48,7 @@ session_start();
                     <a href="../Admin/zone_admin.php">Dashboard</a>
                     <a href="../Admin/liste_utilisateurs.php">Liste des utilisateurs</a>
                     <a href="../Admin/liste_plats.php">Liste des plats</a>
+                    <a href="../Admin/liste_formules.php">Liste des menus</a>
                 <?php endif; ?>
                 <p>Connecté en tant que : <?php echo $_SESSION['nom'] . ' ' . $_SESSION['prenom'] ?></p>
                 <a href="../Actions/Deconnexion.php" class="logout">Déconnexion</a>

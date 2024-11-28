@@ -30,7 +30,8 @@ CREATE TABLE ingredients (
 CREATE TABLE formules (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    prix DECIMAL(10, 2) NOT NULL
+    prix DECIMAL(10, 2) NOT NULL,
+    image VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE commandes (

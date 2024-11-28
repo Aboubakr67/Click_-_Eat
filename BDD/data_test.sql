@@ -38,12 +38,12 @@ INSERT INTO ingredients (nom, image, quantite) VALUES
 ('Crème', 'creme.jpg', 90); -- Crème pour plusieurs desserts
 
 -- Insertion des formules dans `formules`
-INSERT INTO formules (nom, prix) VALUES
-('Menu Classique', 16.00), -- Burger Mixte + Eau Minérale + Fondant au Chocolat
-('Menu Gourmet', 20.00), -- Burger Mixte + Soda Cola + Tarte aux Pommes
-('Menu Enfant', 12.00), -- Mini-Burger + Jus de Fruits + Glace
-('Menu Végétarien', 15.00), -- Salade César + Eau Gazeuse + Cheesecake
-('Menu Premium', 25.00); -- Steak de Saumon + Cocktail Maison + Mousse au Chocolat
+INSERT INTO formules (nom, prix, image) VALUES
+('Menu Classique', 16.00, 'formule_menu_classique.jpg'), -- Burger Mixte + Eau Minérale + Fondant au Chocolat
+('Menu Gourmet', 20.00, 'formule_menu_gourmet.jpg'), -- Burger Mixte + Soda Cola + Tarte aux Pommes
+('Menu Enfant', 12.00, 'formule_menu_enfant.jpg'), -- Mini-Burger + Jus de Fruits + Glace
+('Menu Végétarien', 15.00, 'formule_menu_vegetarien.jpg'), -- Salade César + Eau Gazeuse + Cheesecake
+('Menu Premium', 25.00, 'formule_menu_premium.jpg'); -- Steak de Saumon + Cocktail Maison + Mousse au Chocolat
 
 -- Insertion des associations formules/plats dans `formule_plat`
 INSERT INTO formule_plat (formule_id, plat_id) VALUES

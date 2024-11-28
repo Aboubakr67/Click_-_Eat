@@ -353,3 +353,25 @@ function insertIngredientsToPlat($platId, $ingredients)
         return false; // Retourne false en cas d'erreur
     }
 }
+
+
+// ------------------------------------------ Formules ------------------------------------
+
+// Récupérer les plats par type (plat, boisson, dessert)
+function getPlatsByType($type)
+{
+    try {
+        $con = connexion();
+
+        // Requête pour récupérer les plats en fonction du type
+        $query = "SELECT id, nom, image FROM plats WHERE type = :type";
+        $stmt = $con->prepare($query);
+        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+        return [];
+    }
+}
