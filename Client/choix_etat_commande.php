@@ -10,7 +10,7 @@ require('../HeaderFooter/Client/Header.php');
 
     <div class="bg-white rounded-2xl p-8 shadow-sm mb-4 min-h-[500px]">
         <div class="flex justify-center items-center gap-8 h-full">
-            <div onclick="setOrderType('SUR_PLACE')" 
+            <div onclick="setOrderTypeAndContinue('SUR_PLACE')" 
                  class="bg-white rounded-2xl shadow-md p-8 w-64 h-64 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-[#D84315]">
@@ -20,7 +20,7 @@ require('../HeaderFooter/Client/Header.php');
                 <span class="text-xl font-medium text-center">Sur place</span>
             </div>
 
-            <div onclick="setOrderType('A_EMPORTER')"
+            <div onclick="setOrderTypeAndContinue('A_EMPORTER')"
                  class="bg-white rounded-2xl shadow-md p-8 w-64 h-64 flex flex-col items-center justify-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-[#D84315]">
@@ -30,22 +30,56 @@ require('../HeaderFooter/Client/Header.php');
                 <span class="text-xl font-medium text-center">A emporter</span>
             </div>
         </div>
+
+        <div class="flex justify-center gap-4 mt-12">
+            <button onclick="window.location.href='panier.php'" 
+                    class="px-12 py-3 border-2 border-[#D84315] text-[#D84315] rounded-lg text-lg font-medium hover:bg-gray-50 transition-colors">
+                Retour
+            </button>
+        </div>
     </div>
 
-    <div class="flex justify-center">
-        <a href="panier.php">
-            <button class="px-12 py-3 bg-white text-[#D84315] rounded-lg text-lg font-medium hover:bg-gray-50 transition-colors">
-                Voir mon panier
-            </button>
-        </a>
-    </div>
+    <!-- Include mini cart -->
+    <?php require('panier-mini.php'); ?>
 </div>
 
 <script>
+// Debug function to log cart state
+function logCartState() {
+    const cart = getCart();
+    console.log('Current cart state:', cart);
+    if (cart.items && cart.items.length > 0) {
+        console.log('Current item:', cart.items[cart.items.length - 1]);
+    }
+}
+
+// Function to set order type and continue
+function setOrderTypeAndContinue(type) {
+    const cart = getCart();
+    
+    // Set order type for menu items
+    if (cart.items) {
+        cart.items.forEach(item => {
+            item.orderType = type;
+        });
+    }
+    
+    // Set order type for standalone items
+    cart.orderType = type;
+    cart.step = 'payment';
+    saveCart(cart);
+    
+    // Proceed to payment
+    window.location.href = 'choix_paiment.php';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, checking cart state');
+    logCartState();
+    
     const cart = getCart();
     if (cart.orderType) {
-        const selectedDiv = document.querySelector(`[onclick="setOrderType('${cart.orderType}')"]`);
+        const selectedDiv = document.querySelector(`[onclick="setOrderTypeAndContinue('${cart.orderType}')"]`);
         if (selectedDiv) {
             selectedDiv.classList.add('ring-2', 'ring-[#D84315]');
         }

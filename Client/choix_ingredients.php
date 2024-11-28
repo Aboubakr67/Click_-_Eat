@@ -11,16 +11,27 @@ $formule_id = intval($_GET['formule_id']);
 // Charger le plat et ses ingrédients
 $plat = getPlatFromFormule($formule_id);
 $ingredients = $plat ? getIngredientsFromPlat($plat['id']) : [];
-
+$formules = getAllFormules();
 // Récupérer les suppléments disponibles
 $supplements = getSupplementIngredients();
+
+function getFormuleById($formules, $formule_id) {
+    foreach ($formules as $formule) {
+        if ($formule['id'] === $formule_id) {
+            return $formule;
+        }
+    }
+    return null;
+}
+
+$formuleActive = getFormuleById($formules, $formule_id);
+
 ?>
 
 <div class="p-8">
     <div class="bg-[#D84315] text-white p-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <?php if ($plat): ?>
-            <h1 class="text-2xl font-bold"><?php echo htmlspecialchars($plat['nom']); ?></h1>
-            <span class="text-2xl font-bold"><?php echo number_format($plat['prix'], 2, ',', ' '); ?> €</span>
+            <h1 class="text-2xl font-bold"><?php echo htmlspecialchars($formuleActive['nom']); ?></h1>
         <?php endif; ?>
     </div>
 
@@ -28,7 +39,8 @@ $supplements = getSupplementIngredients();
         <div class="grid grid-cols-2 gap-8">
             <?php if (!empty($ingredients)): ?>
                 <?php foreach ($ingredients as $ingredient): ?>
-                    <div class="flex flex-col items-center transition-all duration-200 p-4 rounded-xl" id="ingredient-<?php echo $ingredient['ingredient_nom']; ?>">
+                    <?php $ingredientId = htmlspecialchars($ingredient['ingredient_nom']); ?>
+                    <div class="flex flex-col items-center transition-all duration-200 p-4 rounded-xl" id="ingredient-<?php echo $ingredientId; ?>">
                         <div class="relative ingredient-image-container">
                             <!-- Red diagonal line for removed state -->
                             <div class="absolute inset-0 hidden removed-overlay">
@@ -36,14 +48,14 @@ $supplements = getSupplementIngredients();
                                 <div class="absolute top-1/2 left-1/2 w-[141%] h-0.5 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
                             </div>
                             <img src="../Assets/images/<?php echo strtolower($ingredient['ingredient_nom']); ?>_menu.png" 
-                                 alt="<?php echo htmlspecialchars($ingredient['ingredient_nom']); ?>" 
+                                 alt="<?php echo $ingredientId; ?>" 
                                  class="w-32 h-32 object-contain mb-2">
                         </div>
                         <div class="text-center">
-                            <h3 class="font-medium mb-1"><?php echo htmlspecialchars($ingredient['ingredient_nom']); ?></h3>
+                            <h3 class="font-medium mb-1"><?php echo $ingredientId; ?></h3>
                             <p class="text-sm text-gray-600 mb-2">Disponible : <?php echo $ingredient['ingredient_quantite']; ?></p>
                             <div class="flex justify-center">
-                                <button onclick="toggleIngredientUI('<?php echo $ingredient['ingredient_nom']; ?>', '<?php echo htmlspecialchars($ingredient['ingredient_nom']); ?>')"
+                                <button onclick="toggleIngredientUI('<?php echo $ingredientId; ?>', '<?php echo $ingredientId; ?>')"
                                         class="px-4 py-2 border border-[#D84315] text-[#D84315] rounded hover:bg-[#D84315] hover:text-white transition-colors toggle-btn">
                                     Retirer
                                 </button>
@@ -68,24 +80,33 @@ $supplements = getSupplementIngredients();
         </div>
     </div>
 
-    <div class="flex justify-center">
-        <a href="panier.php">
-            <button class="px-12 py-3 bg-white text-[#D84315] rounded-lg text-lg font-medium hover:bg-gray-50 transition-colors">
-                Voir mon panier
-            </button>
-        </a>
-    </div>
+    <!-- Include mini cart -->
+    <?php require('panier-mini.php'); ?>
 </div>
 
 <script>
+// Debug function to log cart state
+function logCartState() {
+    const cart = getCart();
+    console.log('Current cart state:', cart);
+    if (cart.items && cart.items.length > 0) {
+        console.log('Current item:', cart.items[cart.items.length - 1]);
+    }
+}
+
 // Update ingredient states based on cart
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, checking cart state');
+    logCartState();
+    
     const cart = getCart();
     const currentItem = cart.items[cart.items.length - 1];
     
     if (currentItem && currentItem.removedIngredients) {
+        console.log('Found removed ingredients:', currentItem.removedIngredients);
         currentItem.removedIngredients.forEach(ing => {
             const ingredientDiv = document.querySelector(`#ingredient-${ing.id}`);
+            console.log('Looking for ingredient:', ing.id, ingredientDiv);
             if (ingredientDiv) {
                 updateIngredientUI(ingredientDiv, true);
             }
@@ -95,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to update ingredient UI
 function updateIngredientUI(ingredientDiv, isRemoved) {
+    console.log('Updating UI:', ingredientDiv.id, 'to removed state:', isRemoved);
     const overlay = ingredientDiv.querySelector('.removed-overlay');
     const toggleBtn = ingredientDiv.querySelector('.toggle-btn');
     
@@ -115,9 +137,18 @@ function updateIngredientUI(ingredientDiv, isRemoved) {
 
 // Function to toggle ingredient with UI update
 function toggleIngredientUI(id, name) {
+    console.log('Toggling UI for ingredient:', id, name);
     const cart = getCart();
     const currentItem = cart.items[cart.items.length - 1];
-    const isRemoved = currentItem.removedIngredients && currentItem.removedIngredients.some(ing => ing.id === id);
+    
+    // Initialize removedIngredients if it doesn't exist
+    if (!currentItem.removedIngredients) {
+        currentItem.removedIngredients = [];
+    }
+    
+    // Find ingredient in removed list
+    const isRemoved = currentItem.removedIngredients.some(ing => ing.id === id);
+    console.log('Current removed state:', isRemoved);
     
     // Toggle ingredient in cart
     toggleIngredient(id, name);
@@ -127,6 +158,9 @@ function toggleIngredientUI(id, name) {
     if (ingredientDiv) {
         updateIngredientUI(ingredientDiv, !isRemoved);
     }
+    
+    // Log updated state
+    logCartState();
 }
 
 // Function to validate ingredients and continue
