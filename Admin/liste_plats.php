@@ -11,7 +11,10 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE MANAGEMENT') {
 
 
 $plats = getPlats();
+// var_dump($plats);
 ?>
+
+
 
 <h1>Liste des plats</h1>
 
@@ -35,8 +38,8 @@ if (isset($_SESSION['error'])) {
 <!-- Lien vers la page d'ajout -->
 <a href="create_plat.php">Ajouter un nouveau plat</a>
 
-<!-- Tableau des plats -->
-<table>
+
+<table border="1">
     <thead>
         <tr>
             <th>Nom</th>
@@ -50,19 +53,20 @@ if (isset($_SESSION['error'])) {
     <tbody>
         <?php foreach ($plats as $plat): ?>
             <tr>
-                <td><?= htmlspecialchars($plat['nom']) ?></td>
-                <td><?= htmlspecialchars($plat['type']) ?></td>
-                <td><?= htmlspecialchars($plat['prix']) ?> €</td>
-                <td><img src="../Assets/img/<?= htmlspecialchars($plat['image'] ?? 'default.jpg') ?>" alt="Image du plat" width="100"></td>
-                <td><?= htmlspecialchars($plat['ingredients'] ?? '') ?></td>
+                <td><?= htmlspecialchars($plat->getNom()) ?></td>
+                <td><?= htmlspecialchars($plat->getType()) ?></td>
+                <td><?= htmlspecialchars($plat->getPrix()) ?> €</td>
+                <td><img src="../Assets/img/<?= htmlspecialchars($plat->getImage()) ?>" alt="Image du plat" width="100"></td>
+                <td><?= htmlspecialchars(implode(', ', $plat->getIngredients()) ?: 'Aucun ingrédient') ?></td>
                 <td>
-                    <a href="edit_plat.php?id=<?= $plat['id'] ?>">Modifier</a> |
-                    <a href="delete_plat.php?id=<?= $plat['id'] ?>">Supprimer</a>
+                    <a href="edit_plat.php?id=<?= $plat->getId() ?>">Modifier</a> |
+                    <a href="delete_plat.php?id=<?= $plat->getId() ?>">Supprimer</a>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
 
 <?php
 require('../HeaderFooter/Admin/Footer.php');

@@ -3,15 +3,59 @@ require_once('../HeaderFooter/Admin/Header.php');
 require_once('../Actions/zone_admin_repo.php');
 
 // Récupérer toutes les formules et leurs plats associés, avec les images
+// function getAllFormulesWithPlatsAndImages()
+// {
+//     try {
+//         $con = connexion();
+
+//         // Requête pour récupérer les formules, leurs images, et les plats associés avec leurs images
+//         $query = "
+//             SELECT f.id AS formule_id, f.nom AS formule_nom, f.prix AS formule_prix, f.image AS formule_image,
+//                    p.id AS plat_id, p.nom AS plat_nom, p.image AS plat_image
+//             FROM formules f
+//             LEFT JOIN formule_plat fp ON f.id = fp.formule_id
+//             LEFT JOIN plats p ON fp.plat_id = p.id
+//             ORDER BY f.id, p.nom";
+
+//         $stmt = $con->prepare($query);
+//         $stmt->execute();
+
+//         $result = [];
+//         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//             $formuleId = $row['formule_id'];
+//             if (!isset($result[$formuleId])) {
+//                 $result[$formuleId] = [
+//                     'nom' => $row['formule_nom'],
+//                     'prix' => $row['formule_prix'],
+//                     'image' => $row['formule_image'],
+//                     'plats' => []
+//                 ];
+//             }
+//             if ($row['plat_id']) {
+//                 $result[$formuleId]['plats'][] = [
+//                     'id' => $row['plat_id'],
+//                     'nom' => $row['plat_nom'],
+//                     'image' => $row['plat_image']
+//                 ];
+//             }
+//         }
+//         return $result;
+//     } catch (PDOException $e) {
+//         echo "Erreur : " . $e->getMessage();
+//         return [];
+//     }
+// }
+
 function getAllFormulesWithPlatsAndImages()
 {
     try {
         $con = connexion();
 
-        // Requête pour récupérer les formules, leurs images, et les plats associés avec leurs images
+        // Requête pour récupérer les formules et leurs plats associés avec les informations nécessaires
         $query = "
             SELECT f.id AS formule_id, f.nom AS formule_nom, f.prix AS formule_prix, f.image AS formule_image,
-                   p.id AS plat_id, p.nom AS plat_nom, p.image AS plat_image
+                   p.id AS plat_id, p.nom AS plat_nom, p.prix AS plat_prix, p.type AS plat_type, p.image AS plat_image,
+                   '' AS ingredients
             FROM formules f
             LEFT JOIN formule_plat fp ON f.id = fp.formule_id
             LEFT JOIN plats p ON fp.plat_id = p.id
@@ -20,33 +64,44 @@ function getAllFormulesWithPlatsAndImages()
         $stmt = $con->prepare($query);
         $stmt->execute();
 
-        $result = [];
+        $formules = [];
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $formuleId = $row['formule_id'];
-            if (!isset($result[$formuleId])) {
-                $result[$formuleId] = [
-                    'nom' => $row['formule_nom'],
-                    'prix' => $row['formule_prix'],
-                    'image' => $row['formule_image'],
-                    'plats' => []
-                ];
+            // Créer la formule si elle n'existe pas encore
+            if (!isset($formules[$row['formule_id']])) {
+                $formules[$row['formule_id']] = new Formule(
+                    $row['formule_id'],
+                    $row['formule_nom'],
+                    $row['formule_prix'],
+                    $row['formule_image']
+                );
             }
-            if ($row['plat_id']) {
-                $result[$formuleId]['plats'][] = [
-                    'id' => $row['plat_id'],
-                    'nom' => $row['plat_nom'],
-                    'image' => $row['plat_image']
-                ];
-            }
+
+            // Créer le plat
+            $plat = new Plat(
+                $row['plat_id'],
+                $row['plat_nom'],
+                $row['plat_prix'],
+                $row['plat_type'],
+                $row['plat_image'],
+                [] // Ingrédients vides
+            );
+
+            // Ajouter le plat à la formule
+            $formules[$row['formule_id']]->ajouterPlat($plat);
         }
-        return $result;
+
+        return $formules;
     } catch (PDOException $e) {
         echo "Erreur : " . $e->getMessage();
         return [];
     }
 }
 
+
+
 $formules = getAllFormulesWithPlatsAndImages();
+// var_dump($formules);
 ?>
 
 <h1>Liste des Formules</h1>
@@ -76,32 +131,32 @@ if (isset($_SESSION['error'])) {
     <table border="1">
         <thead>
             <tr>
-                <th>Image</th>
+                <th>Image de la formule</th>
                 <th>Nom de la formule</th>
                 <th>Prix</th>
-                <th>Plats inclus</th>
+                <th>Plats associés</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($formules as $id => $formule): ?>
+            <?php foreach ($formules as $formule): ?>
                 <tr>
                     <td>
-                        <?php if (!empty($formule['image'])): ?>
-                            <img src="../Assets/img/formules/<?php echo htmlspecialchars($formule['image']); ?>" alt="<?php echo htmlspecialchars($formule['nom']); ?>" style="width: 100px; height: auto;">
+                        <?php if (!empty($formule->getImage())): ?>
+                            <img src="../Assets/img/formules/<?php echo htmlspecialchars($formule->getImage()); ?>" alt="<?php echo htmlspecialchars($formule->getNom()); ?>" style="width: 100px; height: auto;">
                         <?php else: ?>
                             Pas d'image
                         <?php endif; ?>
                     </td>
-                    <td><?php echo htmlspecialchars($formule['nom']); ?></td>
-                    <td><?php echo number_format($formule['prix'], 2); ?> €</td>
+                    <td><?php echo htmlspecialchars($formule->getNom()); ?></td>
+                    <td><?php echo number_format($formule->getPrix(), 2); ?> €</td>
                     <td>
-                        <?php if (!empty($formule['plats'])): ?>
+                        <?php if (!empty($formule->getPlats())): ?>
                             <ul>
-                                <?php foreach ($formule['plats'] as $plat): ?>
+                                <?php foreach ($formule->getPlats() as $plat): ?>
                                     <li>
-                                        <img src="../Assets/img/<?php echo htmlspecialchars($plat['image']); ?>" alt="<?php echo htmlspecialchars($plat['nom']); ?>" style="width: 50px; height: auto; margin-right: 5px;">
-                                        <?php echo htmlspecialchars($plat['nom']); ?>
+                                        <img src="../Assets/img/<?php echo htmlspecialchars($plat->getImage()); ?>" alt="<?php echo htmlspecialchars($plat->getNom()); ?>" style="width: 50px; height: auto; margin-right: 5px;">
+                                        <?php echo htmlspecialchars($plat->getNom()); ?> (<?php echo htmlspecialchars($plat->getType()); ?>) - <?php echo number_format($plat->getPrix(), 2); ?> €
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -110,8 +165,8 @@ if (isset($_SESSION['error'])) {
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="edit_formule.php?id=<?php echo $id; ?>">Modifier</a> |
-                        <a href="delete_formule.php?id=<?php echo $id; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette formule ?');">Supprimer</a>
+                        <a href="edit_formule.php?id=<?php echo $formule->getId(); ?>">Modifier</a> |
+                        <a href="delete_formule.php?id=<?php echo $formule->getId(); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette formule ?');">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

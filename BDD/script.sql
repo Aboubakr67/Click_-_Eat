@@ -24,7 +24,8 @@ CREATE TABLE ingredients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
     image VARCHAR(255) NOT NULL,
-    quantite INT DEFAULT 0
+    quantite INT DEFAULT 0,
+    prix_unitaire DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE formules (
