@@ -7,7 +7,7 @@ $formule_id = isset($_GET['formule_id']) ? intval($_GET['formule_id']) : null;
 $isFormuleContext = $formule_id !== null;
 ?>
 
-<div class="p-8">
+<div class="p-8 pb-32">
     <div class="bg-[#D84315] text-white p-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <h1 class="text-2xl font-bold">Boissons</h1>
     </div>

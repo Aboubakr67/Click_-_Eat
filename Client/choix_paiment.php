@@ -240,70 +240,73 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Function to set payment method and show invoice
-function setPaymentMethod(method) {
+// Modifier la fonction setPaymentMethod
+async function setPaymentMethod(method) {
     const cart = getCart();
     cart.paymentMethod = method;
     saveCart(cart);
 
-    // Create modal with invoice
+    try {
+        // Envoyer les données au serveur avant d'afficher la facture
+        const response = await fetch('../Actions/PostCommande.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cart)
+        });
+
+        const result = await response.json();
+        console.log('Réponse du serveur:', result);
+
+        if (result.success) {
+            // Continuer avec l'affichage de la facture
+            showInvoice(cart);
+        } else {
+            alert('Erreur lors de l\'enregistrement de la commande');
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur lors de l\'enregistrement de la commande');
+    }
+}
+
+// Fonction pour afficher la facture
+function showInvoice(cart) {
     const modal = document.createElement('div');
-    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50';
     
-    // Create invoice container
     const invoiceContainer = document.createElement('div');
-    invoiceContainer.className = 'relative'; // Add relative positioning
+    invoiceContainer.className = 'relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto';
     
-    // Add invoice content
     const invoiceContent = generateInvoiceHTML(cart);
     invoiceContainer.appendChild(invoiceContent);
 
-    // Add download button
-    const downloadBtn = document.createElement('button');
-    downloadBtn.className = 'mt-4 px-6 py-2 bg-[#D84315] text-white rounded hover:bg-[#BF360C] transition-colors';
-    downloadBtn.textContent = 'Télécharger la facture';
-    downloadBtn.onclick = (e) => {
-        e.stopPropagation(); // Prevent modal from closing when clicking the button
-        const invoiceHTML = invoiceContainer.innerHTML;
-        const blob = new Blob([`
-            <html>
-                <head>
-                    <title>Facture</title>
-                    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-                </head>
-                <body>
-                    ${invoiceHTML}
-                </body>
-            </html>
-        `], { type: 'text/html' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `facture-${generateInvoiceNumber()}.html`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+    // Ajouter les boutons
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'flex justify-center gap-4 p-8 border-t';
+    
+    const printButton = document.createElement('button');
+    printButton.className = 'px-8 py-3 bg-[#D84315] text-white rounded-lg font-medium hover:bg-[#BF360C] transition-colors';
+    printButton.textContent = 'Imprimer';
+    printButton.onclick = () => {
+        window.print();
     };
-
-    invoiceContainer.querySelector('.bg-white').appendChild(downloadBtn);
+    
+    const closeButton = document.createElement('button');
+    closeButton.className = 'px-8 py-3 border-2 border-[#D84315] text-[#D84315] rounded-lg font-medium hover:bg-gray-50 transition-colors';
+    closeButton.textContent = 'Fermer';
+    closeButton.onclick = () => {
+        document.body.removeChild(modal);
+        // Rediriger vers la page d'accueil ou une autre page
+        window.location.href = 'formules.php';
+    };
+    
+    buttonContainer.appendChild(printButton);
+    buttonContainer.appendChild(closeButton);
+    invoiceContainer.appendChild(buttonContainer);
+    
     modal.appendChild(invoiceContainer);
-
-    // Add click handler to close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-            // Clear cart after closing invoice
-            localStorage.removeItem(STORAGE_KEY);
-            initCart();
-            // Redirect to formules page
-            window.location.href = 'formules.php';
-        }
-    });
-
-    // Prevent clicks inside invoice from closing modal
-    invoiceContainer.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-
     document.body.appendChild(modal);
 }
 </script>

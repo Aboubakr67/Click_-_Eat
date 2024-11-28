@@ -28,7 +28,7 @@ $formuleActive = getFormuleById($formules, $formule_id);
 
 ?>
 
-<div class="p-8">
+<div class="p-8 pb-32">
     <div class="bg-[#D84315] text-white p-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <?php if ($plat): ?>
             <h1 class="text-2xl font-bold"><?php echo htmlspecialchars($formuleActive['nom']); ?></h1>
