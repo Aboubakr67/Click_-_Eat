@@ -1,0 +1,10 @@
+dj@gmail.com
+password123
+
+admin :
+lp@gmail.com
+password123
+
+stock :
+mc@gmail.com
+password123

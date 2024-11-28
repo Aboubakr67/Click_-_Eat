@@ -416,3 +416,160 @@ function getPlatsByType($type)
         return [];
     }
 }
+
+
+//  ---------------------------------------------   COMMANDES -------------------------------------------------------
+
+function generateCodeCommande($paiement_method)
+{
+
+    $con = connexion();
+
+    // Valider le mode de paiement
+    $valid_methods = ['CB', 'ESP'];
+    if (!in_array($paiement_method, $valid_methods)) {
+        throw new Exception("Mode de paiement invalide");
+    }
+
+    // Requête pour récupérer le dernier code_commande pour le mode de paiement donné
+    $stmt = $con->prepare("
+        SELECT code_commande 
+        FROM commandes 
+        WHERE paiement_method = :paiement_method 
+        ORDER BY id DESC 
+        LIMIT 1
+    ");
+    $stmt->execute(['paiement_method' => $paiement_method]);
+
+    $last_code = $stmt->fetchColumn();
+
+    // Si aucun code commande n'existe pour ce mode, commencer avec 'CB01' ou 'ESP01'
+    if (!$last_code) {
+        return $paiement_method . '01';
+    }
+
+    // Extraire la partie numérique du dernier code
+    $numeric_part = (int)substr($last_code, strlen($paiement_method));
+
+    // Incrémenter la partie numérique
+    $new_numeric_part = $numeric_part + 1;
+
+    // Reformater avec un padding de 2 chiffres
+    $new_code = $paiement_method . str_pad($new_numeric_part, 2, '0', STR_PAD_LEFT);
+
+    return $new_code;
+}
+
+
+
+
+function insertCommande($createdAt, $statut, $total, $paiementMethod, $codeCommande, $datePrete = null, $employe = null)
+{
+    $con = connexion();
+
+    $query = "INSERT INTO commandes (created_at, statut, total, paiement_method, code_commande, date_prete, employe) 
+              VALUES (:created_at, :statut, :total, :paiement_method, :code_commande, :date_prete, :employe)";
+    $stmt = $con->prepare($query);
+
+    $stmt->execute([
+        ':created_at' => $createdAt,
+        ':statut' => $statut,
+        ':total' => $total,
+        ':paiement_method' => $paiementMethod,
+        ':code_commande' => $codeCommande,
+        ':date_prete' => $datePrete,
+        ':employe' => $employe,
+    ]);
+
+    return $con->lastInsertId(); // Retourne l'ID de la commande insérée
+}
+
+
+function insertContenuCommande($commandeId, $platId, $quantite = 1, $modifications = '{"ajouts":[],"suppression":[]}', $prixSupplement = 0)
+{
+
+    $con = connexion();
+
+
+    $query = "INSERT INTO contenu_commande (commande_id, plat_id, quantite, modifications, prix_supplément) 
+              VALUES (:commande_id, :plat_id, :quantite, :modifications, :prix_supplement)";
+    $stmt = $con->prepare($query);
+
+    $stmt->execute([
+        ':commande_id' => $commandeId,
+        ':plat_id' => $platId,
+        ':quantite' => $quantite,
+        ':modifications' => $modifications,
+        ':prix_supplement' => $prixSupplement,
+    ]);
+}
+
+function insertHistoriqueIngredient($ingredientId, $dateUtilisee, $quantite)
+{
+
+    $con = connexion();
+
+    $query = "INSERT INTO historique_ingredients_utilisee (ingredient_id, date_utilisee, quantite) 
+              VALUES (:ingredient_id, :date_utilisee, :quantite)";
+    $stmt = $con->prepare($query);
+
+    $stmt->execute([
+        ':ingredient_id' => $ingredientId,
+        ':date_utilisee' => $dateUtilisee,
+        ':quantite' => $quantite,
+    ]);
+}
+
+
+function processCommande($commandeData, $contenuCommandeData, $historiqueIngredientsData)
+{
+    try {
+
+        $con = connexion();
+        // Commencer une transaction
+        $con->beginTransaction();
+
+        // Générer le code commande
+        $commande['code_commande'] = generateCodeCommande($commandeData['paiement_method']);
+
+        // 1. Insérer dans commandes
+        $commandeId = insertCommande(
+            $commandeData['created_at'], // ici c'est date actuelle
+            $commandeData['statut'], // statut EN COURS
+            $commandeData['total'], // faire le calcule de tout les plats commander
+            $commandeData['paiement_method'],
+            $commandeData['code_commande'],
+            $commandeData['date_prete'] ?? null,
+            $commandeData['employe'] ?? null
+        );
+
+        // 2. Insérer les plats dans contenu_commande
+        foreach ($contenuCommandeData as $plat) {
+            insertContenuCommande(
+                $commandeId,
+                $plat['plat_id'],
+                $plat['quantite'],
+                $plat['modifications'] ?? '{"ajouts":[],"suppression":[]}',
+                $plat['prix_supplément'] ?? 0
+            );
+        }
+
+        // 3. Insérer dans historique_ingredients_utilisee
+        foreach ($historiqueIngredientsData as $ingredient) {
+            insertHistoriqueIngredient(
+                $ingredient['ingredient_id'],
+                $ingredient['date_utilisee'],
+                $ingredient['quantite']
+            );
+        }
+
+        // Valider la transaction
+        $con->commit();
+
+        return $commandeId; // Retourne l'ID de la commande
+    } catch (Exception $e) {
+        // Annuler la transaction en cas d'erreur
+        $con->rollBack();
+        throw $e; // Propager l'exception
+    }
+}

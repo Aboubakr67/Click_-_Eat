@@ -70,7 +70,7 @@ INSERT INTO plat_ingredient (plat_id, ingredient_id, quantite) VALUES
 -- Insertion des commandes dans `commandes`
 INSERT INTO commandes (created_at, statut, total, paiement_method, code_commande) VALUES
 (NOW(), 'EN COURS', 16.00, 'CB', 'CMD123'), -- Commande en cours avec Menu Classique
-(NOW(), 'PRETE', 25.00, 'ESPECE', 'CMD124'); -- Commande prête avec Menu Premium
+(NOW(), 'PRETE', 25.00, 'ESP', 'CMD124'); -- Commande prête avec Menu Premium
 
 -- Insertion du contenu des commandes dans `contenu_commande`
 INSERT INTO contenu_commande (commande_id, plat_id, quantite, modifications, prix_supplément) VALUES
