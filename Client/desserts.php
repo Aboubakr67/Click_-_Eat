@@ -31,7 +31,7 @@ $desserts = getAllDesserts();
                         <h2 class="text-lg font-medium mb-1"><?php echo htmlspecialchars($dessert['nom']); ?></h2>
                         <p class="text-sm text-gray-600 mb-3"><?php echo number_format($dessert['prix'], 2, ',', ' '); ?> €</p>
                         <div class="flex flex-col items-center gap-2">
-                            <button onclick="toggleDessertUI('<?php echo $dessertId; ?>', '<?php echo htmlspecialchars($dessert['nom']); ?>', <?php echo $dessert['prix']; ?>)"
+                            <button onclick="toggleDessertUI('<?php echo $dessertId; ?>', '<?php echo htmlspecialchars($dessert['nom']); ?>', <?php echo $dessert['prix']; ?>, '<?php echo strtolower($dessert['image']); ?>')"
                                     class="px-6 py-2 border border-[#D84315] text-[#D84315] rounded hover:bg-[#D84315] hover:text-white transition-colors toggle-btn">
                                 Ajouter
                             </button>
@@ -55,6 +55,8 @@ $desserts = getAllDesserts();
                     </div>
                 </div>
             <?php endforeach; ?>
+            <!-- Include mini cart -->
+            <?php require('panier-mini.php'); ?>
         </div>
 
         <div class="flex justify-center gap-4 mt-12">
@@ -127,8 +129,8 @@ function updateDessertUI(dessertDiv, isAdded, quantity = 1) {
 }
 
 // Function to toggle dessert with UI update
-function toggleDessertUI(id, name, price) {
-    console.log('Toggling UI for dessert:', id, name, price);
+function toggleDessertUI(id, name, price, image) {
+    console.log('Toggling UI for dessert:', id, name, price, image);
     const cart = getCart();
     
     if (!cart.desserts) cart.desserts = [];
@@ -139,7 +141,8 @@ function toggleDessertUI(id, name, price) {
             id,
             name,
             price: parseFloat(price),
-            quantity: 1
+            quantity: 1,
+            image
         });
     } else {
         cart.desserts = cart.desserts.filter(dessert => dessert.id !== id);

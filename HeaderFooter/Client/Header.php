@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borne de Commande</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../../Assets/js/cart.js"></script>
+    <script src="../../Assets/js/script.js"></script>
 </head>
 
-<body class="flex min-h-screen bg-gray-50">
+<body class="flex min-h-screen bg-gray-200">
     <header class="w-[200px] min-h-screen bg-gray-100 fixed left-0 top-0">
         <nav class="flex flex-col h-full py-8 px-4 space-y-8">
             <div class="flex justify-center mb-8">
@@ -34,7 +34,7 @@
             </a>
 
             <a href="../../Client/desserts.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
-                <img src="../../Assets/images/fondant_chocolat.jpg" alt="Dessert" class="w-12 h-12 mb-2 object-cover rounded-full">
+                <img src="../../Assets/images/cheesecake.jpg" alt="Dessert" class="w-12 h-12 mb-2 object-cover rounded-full">
                 <span>Dessert</span>
             </a>
         </nav>

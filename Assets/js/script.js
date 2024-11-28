@@ -8,6 +8,7 @@ const initCart = () => {
             items: [], // Array of menu items
             entrees: [], // Standalone entrées
             boissons: [], // Standalone boissons
+            desserts: [], // Standalone desserts
             total: 0,
             step: 'menu'
         };
@@ -20,7 +21,6 @@ const initCart = () => {
 const saveCart = (cart) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
     updateCartDisplay();
-    updateMiniCart(); // Update mini cart when saving
 };
 
 // Get cart from localStorage
@@ -29,6 +29,7 @@ const getCart = () => {
     if (!cart.items) cart.items = [];
     if (!cart.entrees) cart.entrees = [];
     if (!cart.boissons) cart.boissons = [];
+    if (!cart.desserts) cart.desserts = [];
     return cart;
 };
 
@@ -71,6 +72,13 @@ const calculateStandaloneTotal = (cart) => {
         }, 0);
     }
 
+    // Add standalone desserts total
+    if (cart.desserts && cart.desserts.length > 0) {
+        total += cart.desserts.reduce((sum, dessert) => {
+            return sum + (parseFloat(dessert.price || 0) * (dessert.quantity || 1));
+        }, 0);
+    }
+
     return total;
 };
 
@@ -94,30 +102,35 @@ const updateTotal = () => {
     cart.total = total;
     saveCart(cart);
     
-    // Update total display in header
-    const totalElement = document.querySelector('#cart-total');
-    if (totalElement) {
-        totalElement.textContent = `${total.toFixed(2)} €`;
-    }
+    // Update all total displays on the page
+    const totalElements = document.querySelectorAll('#cart-total');
+    totalElements.forEach(element => {
+        element.textContent = `${total.toFixed(2)} €`;
+    });
 
     console.log('Updated total:', total, 'Cart:', cart);
     return total;
 };
 
-// Update mini cart display
-const updateMiniCart = () => {
+// Update cart icon and total in header
+const updateCartDisplay = () => {
     const cart = getCart();
-    const miniCart = document.getElementById('mini-cart');
+    const cartButton = document.querySelector('#cart-button');
+    const totalElements = document.querySelectorAll('#cart-total');
     
-    if (miniCart) {
-        // Update total
-        const totalElement = miniCart.querySelector('#cart-total');
-        if (totalElement) {
-            totalElement.textContent = `${cart.total.toFixed(2)} €`;
-        }
+    if (cartButton) {
+        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0 || cart.desserts.length > 0;
+        cartButton.style.display = hasItems ? 'block' : 'none';
+    }
+    
+    totalElements.forEach(element => {
+        element.textContent = `${cart.total.toFixed(2)} €`;
+    });
 
-        // Show/hide mini cart based on cart state
-        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0;
+    // Update mini cart visibility
+    const miniCart = document.getElementById('mini-cart');
+    if (miniCart) {
+        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0 || cart.desserts.length > 0;
         miniCart.style.display = hasItems ? 'block' : 'none';
     }
 };
@@ -273,22 +286,6 @@ const setOrderType = (type) => {
     window.location.href = 'choix_paiment.php';
 };
 
-// Update cart icon and total in header
-const updateCartDisplay = () => {
-    const cart = getCart();
-    const cartButton = document.querySelector('#cart-button');
-    const totalElement = document.querySelector('#cart-total');
-    
-    if (cartButton) {
-        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0;
-        cartButton.style.display = hasItems ? 'block' : 'none';
-    }
-    
-    if (totalElement) {
-        totalElement.textContent = `${cart.total.toFixed(2)} €`;
-    }
-};
-
 // Handle page navigation
 const validateStep = (nextPage) => {
     const cart = getCart();
@@ -299,10 +296,10 @@ const validateStep = (nextPage) => {
     window.location.href = `${nextPage}.php`;
 };
 
-// Initialize cart and mini cart when DOM is loaded
+// Initialize cart when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initCart();
-    updateMiniCart();
+    updateCartDisplay();
 });
 
 // Debug function to clear cart
