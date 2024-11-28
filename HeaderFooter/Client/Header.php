@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borne de Commande</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="../../Assets/js/script.js"></script>
+    <script src="../../Assets/js/cart.js"></script>
 </head>
 
 <body class="flex min-h-screen bg-gray-50">
@@ -25,12 +25,17 @@
 
             <a href="../../Client/entrees.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
                 <img src="../../Assets/images/frite.png" alt="Frites" class="w-12 h-12 mb-2">
-                <span>Acompagnement</span>
+                <span>Accompagnement</span>
             </a>
 
-            <a href="../../Client/boissons.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
+            <a href="../../Client/boissons_supplementaires.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
                 <img src="../../Assets/images/boisson.png" alt="Boisson" class="w-12 h-12 mb-2">
                 <span>Boisson</span>
+            </a>
+
+            <a href="../../Client/desserts.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
+                <img src="../../Assets/images/fondant_chocolat.jpg" alt="Dessert" class="w-12 h-12 mb-2 object-cover rounded-full">
+                <span>Dessert</span>
             </a>
         </nav>
     </header>

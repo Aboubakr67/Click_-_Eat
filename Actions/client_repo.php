@@ -5,25 +5,17 @@ require('Databases.php');
 function getAllFormules()
 {
     try {
-
         $con = connexion();
-
         $query = "SELECT id, nom, prix FROM formules";
         $stmt = $con->prepare($query);
-
         $stmt->execute();
-
-        $formules = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $formules;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        // Gestion des erreurs
         echo "Erreur : " . $e->getMessage();
         return [];
     }
 }
 
-// Récupérer les plats de type 'PLAT' associés à la formule
 function getPlatFromFormule($formule_id)
 {
     try {
@@ -42,7 +34,6 @@ function getPlatFromFormule($formule_id)
         return null;
     }
 }
-
 
 function getIngredientsFromPlat($plat_id)
 {
@@ -65,11 +56,8 @@ function getIngredientsFromPlat($plat_id)
 
 function getSupplementIngredients()
 {
-
-
     try {
         $con = connexion();
-
         $query = "
             SELECT id, nom, quantite, prix
             FROM ingredients
@@ -83,12 +71,10 @@ function getSupplementIngredients()
     }
 }
 
-
 function getAllAccompagnementFromFormule()
 {
     try {
         $con = connexion();
-
         $query = "
             SELECT *
             FROM plats
@@ -119,3 +105,19 @@ function getAllBoissons()
     }
 }
 
+function getAllDesserts()
+{
+    try {
+        $con = connexion();
+        $query = "
+            SELECT *
+            FROM plats
+            WHERE type = 'DESSERT'
+        ";
+        $stmt = $con->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+        return [];
+    }
+}
