@@ -31,12 +31,45 @@ require('../HeaderFooter/Client/Header.php');
 </div>
 
 <script>
+// Function to delete menu item
+function deleteMenuItem(index) {
+    const cart = getCart();
+    cart.items.splice(index, 1);
+    saveCart(cart);
+    location.reload();
+}
+
+// Function to delete standalone entrée
+function deleteEntree(id) {
+    const cart = getCart();
+    cart.entrees = cart.entrees.filter(entree => entree.id !== id);
+    saveCart(cart);
+    location.reload();
+}
+
+// Function to delete standalone boisson
+function deleteBoisson(id) {
+    const cart = getCart();
+    cart.boissons = cart.boissons.filter(boisson => boisson.id !== id);
+    saveCart(cart);
+    location.reload();
+}
+
+// Function to delete standalone dessert
+function deleteDessert(id) {
+    const cart = getCart();
+    cart.desserts = cart.desserts.filter(dessert => dessert.id !== id);
+    saveCart(cart);
+    location.reload();
+}
+
 // Function to validate cart and proceed
 function validateCart() {
     const cart = getCart();
     const hasItems = (cart.items && cart.items.length > 0) || 
                     (cart.entrees && cart.entrees.length > 0) || 
-                    (cart.boissons && cart.boissons.length > 0);
+                    (cart.boissons && cart.boissons.length > 0) ||
+                    (cart.desserts && cart.desserts.length > 0);
     
     if (hasItems) {
         // If there are menu items, go to order type selection
@@ -68,9 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <p class="text-[#D84315] font-medium mt-1">${item.price.toFixed(2)} €</p>
                             </div>
                         </div>
-                        <a href="choix_ingredients.php?formule_id=${item.id}" class="text-[#D84315] hover:underline">
-                            Modifier
-                        </a>
+                        <div class="flex items-center gap-4">
+                            <a href="choix_ingredients.php?formule_id=${item.id}" class="text-[#D84315] hover:underline">
+                                Modifier
+                            </a>
+                            <button onclick="deleteMenuItem(${index})" class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>`;
 
             // Show removed ingredients if any
@@ -158,7 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
-                    <a href="entrees.php" class="text-[#D84315] hover:underline">Modifier</a>
+                    <div class="flex items-center gap-4">
+                        <a href="entrees.php" class="text-[#D84315] hover:underline">Modifier</a>
+                        <button onclick="deleteEntree('${entree.id}')" class="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>`;
         });
         cartHTML += '</div></div>';
@@ -183,7 +230,46 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
-                    <a href="boissons.php" class="text-[#D84315] hover:underline">Modifier</a>
+                    <div class="flex items-center gap-4">
+                        <a href="boissons_supplementaires.php" class="text-[#D84315] hover:underline">Modifier</a>
+                        <button onclick="deleteBoisson('${boisson.id}')" class="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>`;
+        });
+        cartHTML += '</div></div>';
+    }
+
+    // Display standalone desserts
+    if (cart.desserts && cart.desserts.length > 0) {
+        cartHTML += `
+            <div class="mb-8">
+                <h2 class="text-xl font-bold mb-4">Desserts supplémentaires</h2>
+                <div class="space-y-4">`;
+        cart.desserts.forEach(dessert => {
+            cartHTML += `
+                <div class="bg-gray-50 rounded-xl p-4 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <img src="../Assets/images/${dessert.image}" alt="${dessert.name}" class="w-16 h-16 object-contain">
+                        <div>
+                            <h3 class="font-medium">${dessert.name}</h3>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-gray-500">x${dessert.quantity}</span>
+                                <span class="text-[#D84315]">${(dessert.price * dessert.quantity).toFixed(2)} €</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="desserts.php" class="text-[#D84315] hover:underline">Modifier</a>
+                        <button onclick="deleteDessert('${dessert.id}')" class="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>`;
         });
         cartHTML += '</div></div>';
@@ -192,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cartHTML += '</div>';
 
     // Show empty cart message if no items
-    if (!cart.items.length && !cart.entrees.length && !cart.boissons.length) {
+    if (!cart.items?.length && !cart.entrees?.length && !cart.boissons?.length && !cart.desserts?.length) {
         cartHTML = `
             <div class="flex flex-col items-center justify-center h-full">
                 <p class="text-gray-500 text-lg mb-4">Votre panier est vide</p>
