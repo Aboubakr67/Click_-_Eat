@@ -7,7 +7,7 @@ if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
     if ($_SESSION['role'] == 'ZONE CUISINE') {
         header("Location: zone_cuisine.php");
     } elseif ($_SESSION['role'] == 'ZONE STOCK') {
-        header("Location: zone_stock.php");
+        header("Location: zone_stock_reel.php");
     } elseif ($_SESSION['role'] == 'ZONE MANAGEMENT') {
         header("Location: zone_admin.php");
     }
@@ -45,7 +45,7 @@ if (isset($_POST['validate'])) {
             if ($_SESSION['role'] == 'ZONE CUISINE') {
                 header("Location: zone_cuisine.php");
             } elseif ($_SESSION['role'] == 'ZONE STOCK') {
-                header("Location: zone_stock.php");
+                header("Location: zone_stock_reel.php");
             } elseif ($_SESSION['role'] == 'ZONE MANAGEMENT') {
                 header("Location: zone_admin.php");
             }

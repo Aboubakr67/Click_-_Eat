@@ -1,6 +1,7 @@
 <?php
 
 require('Databases.php');
+require('ElementCommande.php');
 
 function getAllUsers()
 {
@@ -139,13 +140,35 @@ function createUser($nom, $prenom, $email, $mot_de_passe, $role)
 // ------------------------------------------ Plats ---------------
 
 // Fonction pour récupérer les plats
-function getPlats()
+// function getPlats()
+// {
+//     try {
+//         $con = connexion();
+//         // Requête pour récupérer les plats avec leurs ingrédients
+//         $query = "
+//             SELECT p.id, p.nom, p.image, p.prix, p.type, GROUP_CONCAT(i.nom SEPARATOR ', ') AS ingredients
+//             FROM plats p
+//             LEFT JOIN plat_ingredient pi ON p.id = pi.plat_id
+//             LEFT JOIN ingredients i ON pi.ingredient_id = i.id
+//             GROUP BY p.id
+//         ";
+//         $stmt = $con->prepare($query);
+//         $stmt->execute();
+//         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+//     } catch (PDOException $e) {
+//         echo "Erreur : " . $e->getMessage();
+//         return [];
+//     }
+// }
+
+
+function getPlats(): array
 {
     try {
         $con = connexion();
-        // Requête pour récupérer les plats avec leurs ingrédients
         $query = "
-            SELECT p.id, p.nom, p.image, p.prix, p.type, GROUP_CONCAT(i.nom SEPARATOR ', ') AS ingredients
+            SELECT p.id, p.nom, p.image, p.prix, p.type, 
+                   GROUP_CONCAT(i.nom SEPARATOR ', ') AS ingredients
             FROM plats p
             LEFT JOIN plat_ingredient pi ON p.id = pi.plat_id
             LEFT JOIN ingredients i ON pi.ingredient_id = i.id
@@ -153,7 +176,25 @@ function getPlats()
         ";
         $stmt = $con->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $plats = [];
+        foreach ($results as $row) {
+            $ingredients = !empty($row['ingredients']) ? explode(', ', $row['ingredients']) : [];
+            $plats[] = new Plat(
+                (int)$row['id'],
+                $row['nom'],
+                (float)$row['prix'],
+                $row['type'],
+                $row['image'],
+                $ingredients
+            );
+        }
+
+        // var_dump($plats);
+        // exit;
+
+        return $plats;
     } catch (PDOException $e) {
         echo "Erreur : " . $e->getMessage();
         return [];

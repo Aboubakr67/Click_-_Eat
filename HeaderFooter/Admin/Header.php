@@ -43,7 +43,9 @@ session_start();
                 <?php if ($_SESSION['role'] === 'ZONE CUISINE'): ?>
                     <a href="../Admin/zone_cuisine.php">Zone cuisine</a>
                 <?php elseif ($_SESSION['role'] === 'ZONE STOCK'): ?>
-                    <a href="../Admin/zone_stock.php">Zone stock</a>
+                    <a href="../Admin/zone_stock_reel.php">Stock réel</a>
+                    <a href="../Admin/remplir_stock.php">Remplir le stock</a>
+                    <a href="../Admin/dashboard_stock.php">Dashboard</a>
                 <?php elseif ($_SESSION['role'] === 'ZONE MANAGEMENT'): ?>
                     <a href="../Admin/zone_admin.php">Dashboard</a>
                     <a href="../Admin/liste_utilisateurs.php">Liste des utilisateurs</a>
