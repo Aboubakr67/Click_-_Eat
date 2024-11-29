@@ -3,13 +3,11 @@ require_once('../HeaderFooter/Admin/Header.php');
 require_once('../Actions/zone_admin_repo.php');
 require_once('../Actions/ft_extensions.php');
 
-// Vérifie si l'utilisateur est autorisé
 if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE MANAGEMENT') {
     header("Location: connexion.php");
     exit;
 }
 
-// Vérification de la soumission du formulaire
 if (isset($_POST['submit'])) {
     // Récupérer les données du formulaire
     $nom = $_POST['nom'];
@@ -102,64 +100,143 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-<h1>Créer un plat</h1>
-
-<?php if (isset($_SESSION['error'])): ?>
-    <p style="color:red;">
-        <?php echo $_SESSION['error'];
-        unset($_SESSION['error']); ?>
-    </p>
-<?php endif; ?>
-
-
-<!-- Formulaire HTML pour créer un plat -->
-<form action="create_plat.php" method="POST" enctype="multipart/form-data">
-    <div>
-        <label for="nom">Nom du Plat :</label>
-        <input type="text" name="nom" id="nom" required>
-    </div>
-
-    <div>
-        <label for="prix">Prix :</label>
-        <input type="number" name="prix" id="prix" step="0.01" required>
-    </div>
-
-    <div>
-        <label for="type">Type :</label>
-        <select name="type" id="type" required>
-            <option value="PLAT">PLAT</option>
-            <option value="ENTREE">ENTREE</option>
-            <option value="DESSERT">DESSERT</option>
-            <option value="BOISSON">BOISSON</option>
-        </select>
-    </div>
-
-    <div>
-        <label for="image">Image :</label>
-        <input type="file" name="image" id="image" accept="image/*">
-    </div>
-
-    <div>
-        <label for="ingredients">Ingrédients :</label>
-        <div>
-            <?php
-            // Récupérer tous les ingrédients depuis la base de données
-            $ingredients = getIngredients();
-
-            foreach ($ingredients as $ingredient) {
-                echo "<div style='margin-bottom: 10px;'>";
-                echo "<img src='../Assets/img/ingredients/{$ingredient['image']}' alt='{$ingredient['nom']}' style='width:50px; height:50px; margin-right:10px;'>";
-                echo "<label>";
-                echo "<input type='checkbox' name='ingredients[]' value='{$ingredient['id']}'>";
-                echo htmlspecialchars($ingredient['nom']);
-                echo "</label>";
-                echo "</div>";
-            }
-            ?>
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-[200px] h-screen bg-[#FFF1F1] fixed left-0 top-0">
+        <div class="p-4">
+            <img src="../Assets/images/logo_fast_food.png" alt="Click & Eat" class="w-24 mb-12">
+            
+            <ul class="space-y-6">
+                <li>
+                    <a href="zone_admin.php" class="text-black hover:text-[#D84315]">Dashboard</a>
+                </li>
+                <li>
+                    <a href="liste_utilisateurs.php" class="text-black hover:text-[#D84315]">Gestion utilisateur</a>
+                </li>
+                <li>
+                    <a href="liste_plats.php" class="text-[#D84315]">Gestion de stock</a>
+                </li>
+                <li>
+                    <a href="#" class="text-black hover:text-[#D84315]">Management</a>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <div>
-        <button type="submit" name="submit">Créer le Plat</button>
+    <!-- Main Content -->
+    <div class="ml-[200px] w-[calc(100%-200px)]">
+        <!-- Welcome and Logout Section -->
+        <div class="flex justify-end items-center p-4 bg-white">
+            <div class="flex items-center gap-4">
+                <a href="../Actions/Deconnexion.php" class="px-4 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
+                    Déconnexion
+                </a>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-2xl font-bold">Créer un plat</h1>
+                <a href="liste_plats.php" class="text-[#D84315] hover:text-[#BF360C] flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Retour à la liste
+                </a>
+            </div>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                    <?php 
+                    echo $_SESSION['error'];
+                    unset($_SESSION['error']);
+                    ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Form Section -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <form action="create_plat.php" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- Nom -->
+                        <div>
+                            <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Nom du Plat</label>
+                            <input type="text" id="nom" name="nom" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                        </div>
+
+                        <!-- Prix -->
+                        <div>
+                            <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                            <input type="number" id="prix" name="prix" step="0.01" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                        </div>
+                    </div>
+
+                    <!-- Type -->
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <select id="type" name="type" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                            <option value="PLAT">PLAT</option>
+                            <option value="ENTREE">ENTREE</option>
+                            <option value="DESSERT">DESSERT</option>
+                            <option value="BOISSON">BOISSON</option>
+                        </select>
+                    </div>
+
+                    <!-- Image -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
+                        <input type="file" 
+                               id="image" 
+                               name="image"
+                               accept="image/*"
+                               required
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#D84315] file:text-white hover:file:bg-[#BF360C]">
+                    </div>
+
+                    <!-- Ingrédients -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ingrédients</label>
+                        <div class="grid grid-cols-3 gap-4">
+                            <?php
+                            $ingredients = getIngredients();
+                            foreach ($ingredients as $ingredient):
+                            ?>
+                                <div class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
+                                    <img src="../Assets/img/ingredients/<?php echo $ingredient['image']; ?>" 
+                                         alt="<?php echo htmlspecialchars($ingredient['nom']); ?>" 
+                                         class="w-12 h-12 object-cover rounded">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" 
+                                               id="ingredient_<?php echo $ingredient['id']; ?>"
+                                               name="ingredients[]" 
+                                               value="<?php echo $ingredient['id']; ?>"
+                                               class="w-4 h-4 text-[#D84315] border-gray-300 rounded focus:ring-[#D84315]">
+                                        <label for="ingredient_<?php echo $ingredient['id']; ?>"
+                                               class="ml-2 text-sm text-gray-700">
+                                            <?php echo htmlspecialchars($ingredient['nom']); ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end">
+                        <button type="submit" 
+                                name="submit"
+                                class="px-6 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
+                            Créer le plat
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
+</div>
+
+<?php require('../HeaderFooter/Admin/Footer.php'); ?>

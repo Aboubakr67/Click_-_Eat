@@ -9,6 +9,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Fast food</title>
     <style>
         nav {
@@ -55,7 +56,7 @@ session_start();
                 <p>Connecté en tant que : <?php echo $_SESSION['nom'] . ' ' . $_SESSION['prenom'] ?></p>
                 <a href="../Actions/Deconnexion.php" class="logout">Déconnexion</a>
             <?php else: ?>
-                <a href="../Admin/connexion.php">Se connecter</a>
+                <!-- <a href="../Admin/connexion.php">Se connecter</a> -->
             <?php endif; ?>
         </nav>
     </header>
