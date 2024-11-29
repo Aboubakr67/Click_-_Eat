@@ -59,31 +59,36 @@ if (isset($_POST['validate'])) {
 }
 ?>
 
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <form action="connexion.php" method="POST" class="max-w-md w-full bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-center mb-6">Se connecter</h1>
 
-<h1>Se connecter</h1>
+        <?php if (isset($error_message)): ?>
+            <p class="text-red-500 text-center"><?php echo $error_message; ?></p>
+        <?php endif; ?>
 
-<?php if (isset($error_message)): ?>
-    <p style="color: red;"><?php echo $error_message; ?></p>
-<?php endif; ?>
+        <div class="mb-4">
+            <label for="role" class="block text-gray-700">Rôle :</label>
+            <select name="role" id="role" required class="mt-1 h-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-orange-500">
+                <option value="ZONE CUISINE">ZONE CUISINE</option>
+                <option value="ZONE STOCK">ZONE STOCK</option>
+                <option value="ZONE MANAGEMENT">ZONE MANAGEMENT</option>
+            </select>
+        </div>
 
-<form action="connexion.php" method="POST">
+        <div class="mb-4">
+            <label for="email" class="block text-gray-700">Email :</label>
+            <input type="email" id="email" name="email" required class="mt-1 h-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-orange-500">
+        </div>
 
-    <label for="role">Rôle :</label>
-    <select name="role" id="role" required>
-        <option value="ZONE CUISINE">ZONE CUISINE</option>
-        <option value="ZONE STOCK">ZONE STOCK</option>
-        <option value="ZONE MANAGEMENT">ZONE MANAGEMENT</option>
-    </select><br>
+        <div class="mb-4">
+            <label for="mot_de_passe" class="block text-gray-700">Mot de passe :</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required class="mt-1 h-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-orange-500">
+        </div>
 
-
-    <label for="email">Email :</label>
-    <input type="email" id="email" name="email" required><br>
-
-    <label for="mot_de_passe">Mot de passe :</label>
-    <input type="password" id="mot_de_passe" name="mot_de_passe" required><br>
-
-    <button type="submit" name="validate">Se connecter</button>
-</form>
+        <button type="submit" name="validate" class="w-full bg-orange-500 text-white font-bold py-2 rounded hover:bg-orange-600">Se connecter</button>
+    </form>
+</div>
 
 <?php
 require_once('../HeaderFooter/Admin/Footer.php');

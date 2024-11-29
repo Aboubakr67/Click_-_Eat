@@ -3,13 +3,12 @@ require_once('../HeaderFooter/Admin/Header.php');
 ?>
 
 <?php
-// Vérifie si l'utilisateur est autorisé
+
 if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE MANAGEMENT') {
     header("Location: connexion.php");
     exit;
 }
 
-// Vérifie si l'ID de l'utilisateur est passé
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo "Utilisateur introuvable.";
     exit;
@@ -17,7 +16,6 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 require_once('../Actions/zone_admin_repo.php');
 
-// Récupérer les détails de l'utilisateur
 $userId = (int) $_GET['id'];
 $user = getUserById($userId);
 
@@ -26,7 +24,6 @@ if (!$user) {
     exit;
 }
 
-// Gestion de la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = htmlspecialchars($_POST['nom']);
     $prenom = htmlspecialchars($_POST['prenom']);
@@ -36,62 +33,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updated = updateUser($userId, $nom, $prenom, $email, $role);
 
     if ($updated) {
-        // Enregistrement du message de succès dans la session
         $_SESSION['success'] = "Mise à jour réussie.";
-        // Redirection vers la liste des utilisateurs après mise à jour
         header("Location: liste_utilisateurs.php");
         exit;
     } else {
-        // Enregistrement du message d'erreur dans la session
         $_SESSION['error'] = "Erreur lors de la mise à jour.";
-        // Rester sur la page pour afficher l'erreur
         header("Location: edit_utilisateur.php?id=$userId");
         exit;
     }
 }
 ?>
 
-<h1>Modifier l'utilisateur</h1>
+<div class="flex">
+    <div class="p-8">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold">Modifier l'utilisateur</h1>
+            <a href="liste_utilisateurs.php" class="text-[#D84315] hover:text-[#BF360C] flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Retour à la liste
+            </a>
+        </div>
 
-<?php
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                <?php
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+                ?>
+            </div>
+        <?php endif; ?>
 
-// Affichage des messages d'erreur
-if (isset($_SESSION['error'])) {
-    echo "<p style='color:red;'>{$_SESSION['error']}</p>";
-    unset($_SESSION['error']); // Supprimer le message après affichage
-}
+        <!-- Form Section -->
+        <div class="bg-white rounded-lg shadow-sm p-6 max-w-2xl">
+            <form method="POST" action="" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Nom -->
+                    <div>
+                        <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                        <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom']) ?>" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                    </div>
 
-?>
+                    <!-- Prénom -->
+                    <div>
+                        <label for="prenom" class="block text-sm font-medium text-gray-700 mb-1">Prénom</label>
+                        <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom']) ?>" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                    </div>
+                </div>
 
-<form method="POST" action="">
-    <div>
-        <label for="nom">Nom :</label>
-        <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom']) ?>" required>
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                </div>
+
+                <!-- Rôle -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rôle</label>
+                    <select id="role" name="role" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                        <option value="ZONE CUISINE" <?= $user['role'] === 'ZONE CUISINE' ? 'selected' : '' ?>>ZONE CUISINE</option>
+                        <option value="ZONE STOCK" <?= $user['role'] === 'ZONE STOCK' ? 'selected' : '' ?>>ZONE STOCK</option>
+                        <option value="ZONE MANAGEMENT" <?= $user['role'] === 'ZONE MANAGEMENT' ? 'selected' : '' ?>>ZONE MANAGEMENT</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="px-6 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
+                        Mettre à jour
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div>
-        <label for="prenom">Prénom :</label>
-        <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom']) ?>" required>
-    </div>
-
-    <div>
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-    </div>
-
-    <div>
-        <label for="role">Rôle :</label>
-        <select id="role" name="role" required>
-            <option value="ZONE CUISINE" <?= $user['role'] === 'ZONE CUISINE' ? 'selected' : '' ?>>ZONE CUISINE</option>
-            <option value="ZONE STOCK" <?= $user['role'] === 'ZONE STOCK' ? 'selected' : '' ?>>ZONE STOCK</option>
-            <option value="ZONE MANAGEMENT" <?= $user['role'] === 'ZONE MANAGEMENT' ? 'selected' : '' ?>>ZONE MANAGEMENT</option>
-        </select>
-    </div>
-
-    <button type="submit">Mettre à jour</button>
-</form>
-
-<a href="liste_utilisateurs.php">Retour à la liste des utilisateurs</a>
+</div>
+</div>
 
 <?php
 require_once('../HeaderFooter/Admin/Footer.php');

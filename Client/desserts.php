@@ -31,7 +31,7 @@ $desserts = getAllDesserts();
                         <h2 class="text-lg font-medium mb-1"><?php echo htmlspecialchars($dessert['nom']); ?></h2>
                         <p class="text-sm text-gray-600 mb-3"><?php echo number_format($dessert['prix'], 2, ',', ' '); ?> €</p>
                         <div class="flex flex-col items-center gap-2">
-                            <button onclick="toggleDessertUI('<?php echo $dessertId; ?>', '<?php echo htmlspecialchars($dessert['nom']); ?>', <?php echo $dessert['prix']; ?>)"
+                            <button onclick="toggleDessertUI('<?php echo $dessertId; ?>', '<?php echo htmlspecialchars($dessert['nom']); ?>', <?php echo $dessert['prix']; ?>, '<?php echo strtolower($dessert['image']); ?>')"
                                 class="px-6 py-2 border border-[#D84315] text-[#D84315] rounded hover:bg-[#D84315] hover:text-white transition-colors toggle-btn">
                                 Ajouter
                             </button>
@@ -55,6 +55,8 @@ $desserts = getAllDesserts();
                     </div>
                 </div>
             <?php endforeach; ?>
+            <!-- Include mini cart -->
+            <?php require('panier-mini.php'); ?>
         </div>
 
         <div class="flex justify-center gap-4 mt-12">
@@ -115,6 +117,29 @@ $desserts = getAllDesserts();
             if (quantityDisplay) {
                 quantityDisplay.textContent = quantity;
             }
+        };
+    }
+
+
+    // Function to update dessert UI
+    function updateDessertUI(dessertDiv, isAdded, quantity = 1) {
+        console.log('Updating UI:', dessertDiv.id, 'to added state:', isAdded, 'quantity:', quantity);
+        const addedIndicator = dessertDiv.querySelector('.added-indicator');
+        const toggleBtn = dessertDiv.querySelector('.toggle-btn');
+        const quantityControls = dessertDiv.querySelector('.quantity-controls');
+        const quantityDisplay = dessertDiv.querySelector('.quantity-display');
+
+        if (isAdded) {
+            // Show added state
+            addedIndicator.classList.remove('hidden');
+            addedIndicator.classList.add('flex');
+            toggleBtn.textContent = 'Retirer';
+            toggleBtn.classList.add('bg-[#D84315]', 'text-white');
+            toggleBtn.classList.remove('border-[#D84315]', 'text-[#D84315]');
+            quantityControls.classList.remove('hidden');
+            if (quantityDisplay) {
+                quantityDisplay.textContent = quantity;
+            }
         } else {
             // Show not added state
             addedIndicator.classList.add('hidden');
@@ -123,6 +148,58 @@ $desserts = getAllDesserts();
             toggleBtn.classList.remove('bg-[#D84315]', 'text-white');
             toggleBtn.classList.add('border-[#D84315]', 'text-[#D84315]');
             quantityControls.classList.add('hidden');
+        }
+    }
+
+    // Function to toggle dessert with UI update
+    function toggleDessertUI(id, name, price, image) {
+        console.log('Toggling UI for dessert:', id, name, price, image);
+        const cart = getCart();
+
+        if (!cart.desserts) cart.desserts = [];
+        const isAdded = cart.desserts.some(dessert => dessert.id === id);
+
+        if (!isAdded) {
+            cart.desserts.push({
+                id,
+                name,
+                price: parseFloat(price),
+                quantity: 1,
+                image
+            });
+        } else {
+            cart.desserts = cart.desserts.filter(dessert => dessert.id !== id);
+        }
+
+        saveCart(cart);
+        updateTotal();
+        updateDessertUI(document.querySelector(`#dessert-${id}`), !isAdded);
+
+        logCartState();
+    }
+
+    // Function to update dessert quantity with UI update
+    function updateDessertQuantityUI(id, delta) {
+        console.log('Updating quantity for dessert:', id, 'delta:', delta);
+        const cart = getCart();
+        const dessert = cart.desserts.find(d => d.id === id);
+
+        if (dessert) {
+            const newQuantity = dessert.quantity + delta;
+            if (newQuantity > 0) {
+                dessert.quantity = newQuantity;
+                const dessertDiv = document.querySelector(`#dessert-${id}`);
+                const quantityDisplay = dessertDiv.querySelector('.quantity-display');
+                quantityDisplay.textContent = newQuantity;
+            } else {
+                // Show not added state
+                addedIndicator.classList.add('hidden');
+                addedIndicator.classList.remove('flex');
+                toggleBtn.textContent = 'Ajouter';
+                toggleBtn.classList.remove('bg-[#D84315]', 'text-white');
+                toggleBtn.classList.add('border-[#D84315]', 'text-[#D84315]');
+                quantityControls.classList.add('hidden');
+            }
         }
     }
 

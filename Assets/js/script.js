@@ -3,33 +3,34 @@ const STORAGE_KEY = "fastfood_cart";
 
 // Initialize cart structure
 const initCart = () => {
-  if (!localStorage.getItem(STORAGE_KEY)) {
-    const cart = {
-      items: [], // Array of menu items
-      entrees: [], // Standalone entrées
-      boissons: [], // Standalone boissons
-      total: 0,
-      step: "menu",
-    };
-    saveCart(cart);
-  }
-  updateCartDisplay();
+    if (!localStorage.getItem(STORAGE_KEY)) {
+        const cart = {
+            items: [], // Array of menu items
+            entrees: [], // Standalone entrées
+            boissons: [], // Standalone boissons
+            desserts: [], // Standalone desserts
+            total: 0,
+            step: 'menu'
+        };
+        saveCart(cart);
+    }
+    updateCartDisplay();
 };
 
 // Save cart to localStorage
 const saveCart = (cart) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-  updateCartDisplay();
-  updateMiniCart(); // Update mini cart when saving
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    updateCartDisplay();
 };
 
 // Get cart from localStorage
 const getCart = () => {
-  const cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  if (!cart.items) cart.items = [];
-  if (!cart.entrees) cart.entrees = [];
-  if (!cart.boissons) cart.boissons = [];
-  return cart;
+    const cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (!cart.items) cart.items = [];
+    if (!cart.entrees) cart.entrees = [];
+    if (!cart.boissons) cart.boissons = [];
+    if (!cart.desserts) cart.desserts = [];
+    return cart;
 };
 
 // Calculate item total
@@ -64,12 +65,19 @@ const calculateStandaloneTotal = (cart) => {
     }, 0);
   }
 
-  // Add standalone boissons total
-  if (cart.boissons && cart.boissons.length > 0) {
-    total += cart.boissons.reduce((sum, boisson) => {
-      return sum + parseFloat(boisson.price || 0) * (boisson.quantity || 1);
-    }, 0);
-  }
+    // Add standalone boissons total
+    if (cart.boissons && cart.boissons.length > 0) {
+        total += cart.boissons.reduce((sum, boisson) => {
+            return sum + (parseFloat(boisson.price || 0) * (boisson.quantity || 1));
+        }, 0);
+    }
+
+    // Add standalone desserts total
+    if (cart.desserts && cart.desserts.length > 0) {
+        total += cart.desserts.reduce((sum, dessert) => {
+            return sum + (parseFloat(dessert.price || 0) * (dessert.quantity || 1));
+        }, 0);
+    }
 
   return total;
 };
@@ -89,40 +97,42 @@ const calculateCartTotal = (cart) => {
 
 // Update total price
 const updateTotal = () => {
-  const cart = getCart();
-  const total = calculateCartTotal(cart);
-  cart.total = total;
-  saveCart(cart);
-
-  // Update total display in header
-  const totalElement = document.querySelector("#cart-total");
-  if (totalElement) {
-    totalElement.textContent = `${total.toFixed(2)} €`;
-  }
+    const cart = getCart();
+    const total = calculateCartTotal(cart);
+    cart.total = total;
+    saveCart(cart);
+    
+    // Update all total displays on the page
+    const totalElements = document.querySelectorAll('#cart-total');
+    totalElements.forEach(element => {
+        element.textContent = `${total.toFixed(2)} €`;
+    });
 
   console.log("Updated total:", total, "Cart:", cart);
   return total;
 };
 
-// Update mini cart display
-const updateMiniCart = () => {
-  const cart = getCart();
-  const miniCart = document.getElementById("mini-cart");
-
-  if (miniCart) {
-    // Update total
-    const totalElement = miniCart.querySelector("#cart-total");
-    if (totalElement) {
-      totalElement.textContent = `${cart.total.toFixed(2)} €`;
+// Update cart icon and total in header
+const updateCartDisplay = () => {
+    const cart = getCart();
+    const cartButton = document.querySelector('#cart-button');
+    const totalElements = document.querySelectorAll('#cart-total');
+    
+    if (cartButton) {
+        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0 || cart.desserts.length > 0;
+        cartButton.style.display = hasItems ? 'block' : 'none';
     }
+    
+    totalElements.forEach(element => {
+        element.textContent = `${cart.total.toFixed(2)} €`;
+    });
 
-    // Show/hide mini cart based on cart state
-    const hasItems =
-      cart.items.length > 0 ||
-      cart.entrees.length > 0 ||
-      cart.boissons.length > 0;
-    miniCart.style.display = hasItems ? "block" : "none";
-  }
+    // Update mini cart visibility
+    const miniCart = document.getElementById('mini-cart');
+    if (miniCart) {
+        const hasItems = cart.items.length > 0 || cart.entrees.length > 0 || cart.boissons.length > 0 || cart.desserts.length > 0;
+        miniCart.style.display = hasItems ? 'block' : 'none';
+    }
 };
 
 // Add menu item to cart
@@ -284,25 +294,6 @@ const setOrderType = (type) => {
   window.location.href = "choix_paiment.php";
 };
 
-// Update cart icon and total in header
-const updateCartDisplay = () => {
-  const cart = getCart();
-  const cartButton = document.querySelector("#cart-button");
-  const totalElement = document.querySelector("#cart-total");
-
-  if (cartButton) {
-    const hasItems =
-      cart.items.length > 0 ||
-      cart.entrees.length > 0 ||
-      cart.boissons.length > 0;
-    cartButton.style.display = hasItems ? "block" : "none";
-  }
-
-  if (totalElement) {
-    totalElement.textContent = `${cart.total.toFixed(2)} €`;
-  }
-};
-
 // Handle page navigation
 const validateStep = (nextPage) => {
   const cart = getCart();
@@ -313,10 +304,10 @@ const validateStep = (nextPage) => {
   window.location.href = `${nextPage}.php`;
 };
 
-// Initialize cart and mini cart when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
-  initCart();
-  updateMiniCart();
+// Initialize cart when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initCart();
+    updateCartDisplay();
 });
 
 // Debug function to clear cart
