@@ -1,5 +1,5 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 ?>
 
 <?php
@@ -9,7 +9,7 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE MANAGEMENT') {
     exit;
 }
 
-require('../Actions/zone_admin_repo.php');
+require_once('../Actions/zone_admin_repo.php');
 
 // Gestion de la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -96,5 +96,5 @@ if (isset($_SESSION['error'])) {
 <a href="liste_utilisateurs.php">Retour à la liste des utilisateurs</a>
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

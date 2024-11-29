@@ -1,6 +1,6 @@
 <?php
 require_once '../Actions/Databases.php';
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 
 
 if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
@@ -86,5 +86,5 @@ if (isset($_POST['validate'])) {
 </form>
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

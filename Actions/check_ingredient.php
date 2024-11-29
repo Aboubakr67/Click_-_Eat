@@ -1,6 +1,6 @@
 <?php
 
-require('Databases.php');
+require_once('Databases.php');
 
 $con = connexion();
 

@@ -1,5 +1,5 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 ?>
 
 <div class="min-h-screen bg-gray-100 w-full">

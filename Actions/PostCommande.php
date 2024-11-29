@@ -1,5 +1,6 @@
 <?php
-require('Databases.php');
+require_once('Databases.php');
+require_once('zone_admin_repo.php');
 
 header('Content-Type: application/json');
 
@@ -11,7 +12,8 @@ try {
     $con->beginTransaction();
 
     // Générer un code de commande unique
-    $code_commande = 'CMD' . date('ymd') . rand(100, 999);
+    //$code_commande = 'CMD' . uniqid();
+    $code_commande = generateCodeCommande($data['paymentMethod']);;
 
     // Insérer la commande principale
     $stmt = $con->prepare("
@@ -185,6 +187,12 @@ try {
             ]);
         }
     }
+
+    // Récupérer les ingrédients nécessaires
+    $ingredients = getIngredientsForCommande($commande_id);
+
+    // Mettre à jour le stock et l'historique
+    updateStockAndAddToHistory($ingredients);
 
     $con->commit();
 

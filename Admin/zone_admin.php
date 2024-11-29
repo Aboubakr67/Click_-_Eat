@@ -1,5 +1,5 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 require_once('../Actions/zone_cuisine_repo.php');
 ?>
 <?php
@@ -25,5 +25,5 @@ $tempsMoyen = getTempsMoyenCommande();
 </div>
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

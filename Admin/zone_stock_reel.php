@@ -1,5 +1,5 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 ?>
 <?php
 if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
@@ -90,5 +90,5 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
 </script>
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

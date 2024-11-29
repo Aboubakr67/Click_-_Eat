@@ -1,6 +1,6 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
-require('../Actions/zone_admin_repo.php');
+require_once('../HeaderFooter/Admin/Header.php');
+require_once('../Actions/zone_admin_repo.php');
 
 // Vérification de l'autorisation
 if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE MANAGEMENT') {
@@ -69,5 +69,5 @@ if (isset($_SESSION['error'])) {
 
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

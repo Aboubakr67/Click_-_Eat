@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($ingredients)) {
             $_SESSION['error'] = "Vous devez sélectionner au moins un ingrédient.";
             header("Location: edit_plat.php?id=$platId");
-            exit; 
+            exit;
         }
     }
 
@@ -162,4 +162,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button type="submit">Mettre à jour le plat</button>
 </form>
 
-<?php require('../HeaderFooter/Admin/Footer.php'); ?>
+<?php require_once('../HeaderFooter/Admin/Footer.php'); ?>

@@ -1,12 +1,12 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 
 if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE CUISINE') {
     header("Location: connexion.php");
     exit;
 }
 
-require("../Actions/zone_cuisine_repo.php");
+require_once("../Actions/zone_cuisine_repo.php");
 
 
 // Récupérer l'ID de la commande depuis l'URL

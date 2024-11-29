@@ -10,7 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../Assets/js/script.js"></script>
     <script src="../Assets/js/cart.js"></script>
-    >>>>>>> 7036085fffe502de3ab0c8ca20e39b271669ddd1
 </head>
 
 <body class="flex min-h-screen bg-gray-50">

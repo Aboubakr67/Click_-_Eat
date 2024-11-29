@@ -1,6 +1,6 @@
 <?php
 
-require('Databases.php');
+require_once('Databases.php');
 $con = connexion();
 
 $data = json_decode(file_get_contents('php://input'), true);

@@ -1,7 +1,7 @@
 <?php
 
-require('Databases.php');
-require('ElementCommande.php');
+require_once('Databases.php');
+require_once('ElementCommande.php');
 
 function getAllUsers()
 {
@@ -422,42 +422,47 @@ function getPlatsByType($type)
 
 function generateCodeCommande($paiement_method)
 {
+    try {
+        $con = connexion();
 
-    $con = connexion();
+        // Valider le mode de paiement
+        $valid_methods = ['CB', 'ESP'];
+        if (!in_array($paiement_method, $valid_methods)) {
+            throw new Exception("Mode de paiement invalide");
+        }
 
-    // Valider le mode de paiement
-    $valid_methods = ['CB', 'ESP'];
-    if (!in_array($paiement_method, $valid_methods)) {
-        throw new Exception("Mode de paiement invalide");
+        // Requête pour récupérer le dernier code_commande pour le mode de paiement donné
+        $stmt = $con->prepare("
+            SELECT code_commande 
+            FROM commandes 
+            WHERE paiement_method = :paiement_method 
+            ORDER BY id DESC 
+            LIMIT 1
+        ");
+        $stmt->execute(['paiement_method' => $paiement_method]);
+
+        $last_code = $stmt->fetchColumn();
+
+        // Si aucun code commande n'existe pour ce mode, commencer avec 'CB01' ou 'ESP01'
+        if (!$last_code) {
+            return $paiement_method . '01';
+        }
+
+        // Extraire la partie numérique du dernier code
+        $numeric_part = (int)substr($last_code, strlen($paiement_method));
+
+        // Incrémenter la partie numérique
+        $new_numeric_part = $numeric_part + 1;
+
+        // Reformater avec un padding de 2 chiffres
+        $new_code = $paiement_method . str_pad($new_numeric_part, 2, '0', STR_PAD_LEFT);
+
+        return $new_code;
+    } catch (Exception $e) {
+        // Si une erreur se produit, renvoyer une réponse JSON d'erreur
+        echo json_encode(['error' => $e->getMessage()]);
+        exit;
     }
-
-    // Requête pour récupérer le dernier code_commande pour le mode de paiement donné
-    $stmt = $con->prepare("
-        SELECT code_commande 
-        FROM commandes 
-        WHERE paiement_method = :paiement_method 
-        ORDER BY id DESC 
-        LIMIT 1
-    ");
-    $stmt->execute(['paiement_method' => $paiement_method]);
-
-    $last_code = $stmt->fetchColumn();
-
-    // Si aucun code commande n'existe pour ce mode, commencer avec 'CB01' ou 'ESP01'
-    if (!$last_code) {
-        return $paiement_method . '01';
-    }
-
-    // Extraire la partie numérique du dernier code
-    $numeric_part = (int)substr($last_code, strlen($paiement_method));
-
-    // Incrémenter la partie numérique
-    $new_numeric_part = $numeric_part + 1;
-
-    // Reformater avec un padding de 2 chiffres
-    $new_code = $paiement_method . str_pad($new_numeric_part, 2, '0', STR_PAD_LEFT);
-
-    return $new_code;
 }
 
 
@@ -571,5 +576,86 @@ function processCommande($commandeData, $contenuCommandeData, $historiqueIngredi
         // Annuler la transaction en cas d'erreur
         $con->rollBack();
         throw $e; // Propager l'exception
+    }
+}
+
+
+function getIngredientsForCommande($commande_id)
+{
+    try {
+        $con = connexion();
+
+        // Récupérer les plats liés à la commande et leur quantité
+        $stmt = $con->prepare("
+            SELECT cc.plat_id, cc.quantite AS plat_quantite
+            FROM contenu_commande cc
+            WHERE cc.commande_id = :commande_id
+        ");
+        $stmt->execute(['commande_id' => $commande_id]);
+        $plats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $ingredients = [];
+
+        foreach ($plats as $plat) {
+            // Récupérer les ingrédients nécessaires pour chaque plat
+            $stmt = $con->prepare("
+                SELECT pi.ingredient_id, pi.quantite AS ingredient_quantite, i.nom
+                FROM plat_ingredient pi
+                JOIN ingredients i ON pi.ingredient_id = i.id
+                WHERE pi.plat_id = :plat_id
+            ");
+            $stmt->execute(['plat_id' => $plat['plat_id']]);
+            $plat_ingredients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($plat_ingredients as $ingredient) {
+                $total_quantity = $ingredient['ingredient_quantite'] * $plat['plat_quantite'];
+
+                if (isset($ingredients[$ingredient['ingredient_id']])) {
+                    $ingredients[$ingredient['ingredient_id']]['quantite'] += $total_quantity;
+                } else {
+                    $ingredients[$ingredient['ingredient_id']] = [
+                        'id' => $ingredient['ingredient_id'],
+                        'nom' => $ingredient['nom'],
+                        'quantite' => $total_quantity
+                    ];
+                }
+            }
+        }
+
+        return $ingredients;
+    } catch (Exception $e) {
+        throw new Exception("Erreur dans la récupération des ingrédients : " . $e->getMessage());
+    }
+}
+
+function updateStockAndAddToHistory($ingredients)
+{
+    try {
+        $con = connexion();
+
+        foreach ($ingredients as $ingredient) {
+            // Mettre à jour le stock
+            $stmt = $con->prepare("
+                UPDATE ingredients 
+                SET quantite = quantite - :quantite 
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                'quantite' => $ingredient['quantite'],
+                'id' => $ingredient['id']
+            ]);
+
+            // Ajouter une entrée dans l'historique
+            $stmt = $con->prepare("
+                INSERT INTO historique_ingredients_utilisee (ingredient_id, date_utilisee, quantite)
+                VALUES (:ingredient_id, NOW(), :quantite)
+            ");
+            $stmt->execute([
+                'ingredient_id' => $ingredient['id'],
+                'quantite' => $ingredient['quantite']
+            ]);
+        }
+    } catch (Exception $e) {
+        throw new Exception("Erreur dans la mise à jour du stock ou de l'historique : " . $e->getMessage());
     }
 }

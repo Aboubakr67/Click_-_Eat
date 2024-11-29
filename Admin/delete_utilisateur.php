@@ -1,5 +1,5 @@
 <?php
-require('../HeaderFooter/Admin/Header.php');
+require_once('../HeaderFooter/Admin/Header.php');
 ?>
 
 <?php
@@ -15,7 +15,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     exit;
 }
 
-require('../Actions/zone_admin_repo.php');
+require_once('../Actions/zone_admin_repo.php');
 
 // Récupérer l'ID de l'utilisateur
 $userId = (int) $_GET['id'];
@@ -38,5 +38,5 @@ if ($deleted) {
 ?>
 
 <?php
-require('../HeaderFooter/Admin/Footer.php');
+require_once('../HeaderFooter/Admin/Footer.php');
 ?>

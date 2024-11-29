@@ -1,6 +1,6 @@
 <?php
-require('../HeaderFooter/Client/Header.php');
-require("../Actions/client_repo.php");
+require_once('../HeaderFooter/Client/Header.php');
+require_once("../Actions/client_repo.php");
 $formules = getAllFormules();
 ?>
 
@@ -10,8 +10,8 @@ $formules = getAllFormules();
     <div class="grid grid-cols-3 gap-6 mb-24">
         <?php if (!empty($formules)): ?>
             <?php foreach ($formules as $formule): ?>
-                <div onclick="addMenuItem(<?php echo htmlspecialchars($formule['id']); ?>, '<?php echo htmlspecialchars($formule['nom']); ?>', <?php echo $formule['prix']; ?>, 'menu-01.png')" 
-                     class="bg-white rounded-xl p-6 relative group hover:shadow-lg cursor-pointer">
+                <div onclick="addMenuItem(<?php echo htmlspecialchars($formule['id']); ?>, '<?php echo htmlspecialchars($formule['nom']); ?>', <?php echo $formule['prix']; ?>, 'menu-01.png')"
+                    class="bg-white rounded-xl p-6 relative group hover:shadow-lg cursor-pointer">
                     <div class="flex items-start gap-6">
                         <div class="relative w-32 flex-shrink-0">
                             <img src="../Assets/images/menu-01.png" alt="Menu" class="w-full">
@@ -51,5 +51,5 @@ $formules = getAllFormules();
 </div>
 
 <?php
-require('../HeaderFooter/Client/Footer.php');
+require_once('../HeaderFooter/Client/Footer.php');
 ?>
