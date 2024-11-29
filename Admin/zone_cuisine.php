@@ -35,7 +35,7 @@ $commandes = getCommandes();
     </div>
 
     <!-- Main Content -->
-    <div class="ml-[200px] w-[calc(100%-200px)]">
+    <div class="w-[calc(100%-200px)]">
         <div class="p-8">
             <!-- Header Section -->
             <div class="flex justify-between items-center mb-8">

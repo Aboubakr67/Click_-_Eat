@@ -44,9 +44,15 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
         foreach ($platsAssocies as $plat) {
             switch ($plat['type']) {
-                case 'PLAT': $platId = $plat['plat_id']; break;
-                case 'BOISSON': $boissonId = $plat['plat_id']; break;
-                case 'DESSERT': $dessertId = $plat['plat_id']; break;
+                case 'PLAT':
+                    $platId = $plat['plat_id'];
+                    break;
+                case 'BOISSON':
+                    $boissonId = $plat['plat_id'];
+                    break;
+                case 'DESSERT':
+                    $dessertId = $plat['plat_id'];
+                    break;
             }
         }
     } catch (PDOException $e) {
@@ -145,152 +151,119 @@ if (isset($_POST['submit'])) {
 ?>
 
 <div class="flex">
-    <!-- Sidebar -->
-    <div class="w-[200px] h-screen bg-[#FFF1F1] fixed left-0 top-0">
-        <div class="p-4">
-            <img src="../Assets/images/logo_fast_food.png" alt="Click & Eat" class="w-24 mb-12">
-            
-            <ul class="space-y-6">
-                <li>
-                    <a href="zone_admin.php" class="text-black hover:text-[#D84315]">Dashboard</a>
-                </li>
-                <li>
-                    <a href="liste_utilisateurs.php" class="text-black hover:text-[#D84315]">Gestion utilisateur</a>
-                </li>
-                <li>
-                    <a href="liste_plats.php" class="text-black hover:text-[#D84315]">Gestion de stock</a>
-                </li>
-                <li>
-                    <a href="liste_formules.php" class="text-[#D84315]">Management</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="ml-[200px] w-[calc(100%-200px)]">
-        <!-- Welcome and Logout Section -->
-        <div class="flex justify-end items-center p-4 bg-white">
-            <div class="flex items-center gap-4">
-                <a href="../Actions/Deconnexion.php" class="px-4 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
-                    Déconnexion
-                </a>
-            </div>
+    <div class="p-8">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold">Modifier une Formule</h1>
+            <a href="liste_formules.php" class="text-[#D84315] hover:text-[#BF360C] flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Retour à la liste
+            </a>
         </div>
 
-        <div class="p-8">
-            <!-- Header Section -->
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-2xl font-bold">Modifier une Formule</h1>
-                <a href="liste_formules.php" class="text-[#D84315] hover:text-[#BF360C] flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                    </svg>
-                    Retour à la liste
-                </a>
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                <?php
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+                ?>
             </div>
+        <?php endif; ?>
 
-            <?php if (isset($_SESSION['error'])): ?>
-                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
-                    <?php 
-                    echo $_SESSION['error'];
-                    unset($_SESSION['error']);
-                    ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- Form Section -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
-                <form action="edit_formule.php?id=<?php echo $formuleId; ?>" method="POST" enctype="multipart/form-data" class="space-y-6">
-                    <div class="grid grid-cols-2 gap-6">
-                        <!-- Nom -->
-                        <div>
-                            <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Nom de la Formule</label>
-                            <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($formule['nom']); ?>" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
-                        </div>
-
-                        <!-- Prix -->
-                        <div>
-                            <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                            <input type="number" id="prix" name="prix" value="<?php echo $formule['prix']; ?>" step="0.01" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
-                        </div>
-                    </div>
-
-                    <!-- Image -->
+        <!-- Form Section -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <form action="edit_formule.php?id=<?php echo $formuleId; ?>" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Nom -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Image de la Formule</label>
-                        <div class="flex items-center space-x-4">
-                            <?php if ($formule['image']): ?>
-                                <img src="../Assets/img/formules/<?php echo $formule['image']; ?>" 
-                                     alt="Image actuelle" 
-                                     class="w-24 h-24 object-cover rounded-lg">
-                            <?php endif; ?>
-                            <input type="file" 
-                                   id="image" 
-                                   name="image"
-                                   accept="image/*"
-                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#D84315] file:text-white hover:file:bg-[#BF360C]">
-                        </div>
+                        <label for="nom" class="block text-sm font-medium text-gray-700 mb-1">Nom de la Formule</label>
+                        <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($formule['nom']); ?>" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
                     </div>
 
-                    <!-- Sélection des plats -->
-                    <div class="grid grid-cols-3 gap-6">
-                        <!-- Plat -->
-                        <div>
-                            <label for="plat_id" class="block text-sm font-medium text-gray-700 mb-1">Plat Principal</label>
-                            <select name="plat_id" id="plat_id" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
-                                <option value="">Sélectionnez un plat</option>
-                                <?php foreach ($platsPlats as $plat): ?>
-                                    <option value="<?php echo $plat['id']; ?>" <?php echo ($plat['id'] == $platId) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($plat['nom']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+                    <!-- Prix -->
+                    <div>
+                        <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                        <input type="number" id="prix" name="prix" value="<?php echo $formule['prix']; ?>" step="0.01" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                    </div>
+                </div>
 
-                        <!-- Boisson -->
-                        <div>
-                            <label for="boisson_id" class="block text-sm font-medium text-gray-700 mb-1">Boisson</label>
-                            <select name="boisson_id" id="boisson_id" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
-                                <option value="">Sélectionnez une boisson</option>
-                                <?php foreach ($platsBoissons as $boisson): ?>
-                                    <option value="<?php echo $boisson['id']; ?>" <?php echo ($boisson['id'] == $boissonId) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($boisson['nom']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+                <!-- Image -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Image de la Formule</label>
+                    <div class="flex items-center space-x-4">
+                        <?php if ($formule['image']): ?>
+                            <img src="../Assets/img/formules/<?php echo $formule['image']; ?>"
+                                alt="Image actuelle"
+                                class="w-24 h-24 object-cover rounded-lg">
+                        <?php endif; ?>
+                        <input type="file"
+                            id="image"
+                            name="image"
+                            accept="image/*"
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#D84315] file:text-white hover:file:bg-[#BF360C]">
+                    </div>
+                </div>
 
-                        <!-- Dessert -->
-                        <div>
-                            <label for="dessert_id" class="block text-sm font-medium text-gray-700 mb-1">Dessert</label>
-                            <select name="dessert_id" id="dessert_id" required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
-                                <option value="">Sélectionnez un dessert</option>
-                                <?php foreach ($platsDesserts as $dessert): ?>
-                                    <option value="<?php echo $dessert['id']; ?>" <?php echo ($dessert['id'] == $dessertId) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($dessert['nom']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+                <!-- Sélection des plats -->
+                <div class="grid grid-cols-3 gap-6">
+                    <!-- Plat -->
+                    <div>
+                        <label for="plat_id" class="block text-sm font-medium text-gray-700 mb-1">Plat Principal</label>
+                        <select name="plat_id" id="plat_id" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                            <option value="">Sélectionnez un plat</option>
+                            <?php foreach ($platsPlats as $plat): ?>
+                                <option value="<?php echo $plat['id']; ?>" <?php echo ($plat['id'] == $platId) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($plat['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="flex justify-end">
-                        <button type="submit" name="submit"
-                                class="px-6 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
-                            Mettre à jour la formule
-                        </button>
+                    <!-- Boisson -->
+                    <div>
+                        <label for="boisson_id" class="block text-sm font-medium text-gray-700 mb-1">Boisson</label>
+                        <select name="boisson_id" id="boisson_id" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                            <option value="">Sélectionnez une boisson</option>
+                            <?php foreach ($platsBoissons as $boisson): ?>
+                                <option value="<?php echo $boisson['id']; ?>" <?php echo ($boisson['id'] == $boissonId) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($boisson['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
-                </form>
-            </div>
+
+                    <!-- Dessert -->
+                    <div>
+                        <label for="dessert_id" class="block text-sm font-medium text-gray-700 mb-1">Dessert</label>
+                        <select name="dessert_id" id="dessert_id" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D84315] focus:border-transparent">
+                            <option value="">Sélectionnez un dessert</option>
+                            <?php foreach ($platsDesserts as $dessert): ?>
+                                <option value="<?php echo $dessert['id']; ?>" <?php echo ($dessert['id'] == $dessertId) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($dessert['nom']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" name="submit"
+                        class="px-6 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
+                        Mettre à jour la formule
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 <?php require('../HeaderFooter/Admin/Footer.php'); ?>

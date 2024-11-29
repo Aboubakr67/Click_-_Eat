@@ -5,7 +5,6 @@ require('../HeaderFooter/Client/Header.php');
 <div class="p-8">
     <div class="bg-[#D84315] text-white p-6 -mx-8 -mt-8 mb-8 flex justify-between items-center">
         <h1 class="text-2xl font-bold">Mode de paiement</h1>
-        <span id="cart-total" class="text-2xl font-bold">0,00 €</span>
     </div>
 
     <div class="bg-white rounded-2xl p-8 shadow-sm mb-4 min-h-[500px]">
