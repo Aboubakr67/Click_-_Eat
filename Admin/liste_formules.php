@@ -91,7 +91,7 @@ $formules = getAllFormulesWithPlatsAndImages();
                     <div class="p-6">
                         <!-- Formule Header -->
                         <div class="flex items-start gap-4 mb-4">
-                            <img src="../Assets/img/formules/<?php echo htmlspecialchars($formule->getImage()); ?>"
+                            <img src="../Assets/images/formules/<?php echo htmlspecialchars($formule->getImage()); ?>"
                                 alt="<?php echo htmlspecialchars($formule->getNom()); ?>"
                                 class="w-32 h-32 object-cover rounded-lg">
                             <div class="flex-1">
@@ -121,7 +121,7 @@ $formules = getAllFormulesWithPlatsAndImages();
                             <div class="space-y-3">
                                 <?php foreach ($formule->getPlats() as $plat): ?>
                                     <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-                                        <img src="../Assets/img/<?php echo htmlspecialchars($plat->getImage()); ?>"
+                                        <img src="../Assets/images/<?php echo htmlspecialchars($plat->getImage()); ?>"
                                             alt="<?php echo htmlspecialchars($plat->getNom()); ?>"
                                             class="w-12 h-12 object-cover rounded">
                                         <div>

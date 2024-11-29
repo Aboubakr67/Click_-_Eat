@@ -15,7 +15,8 @@ $formules = getAllFormules();
 // Récupérer les suppléments disponibles
 $supplements = getSupplementIngredients();
 
-function getFormuleById($formules, $formule_id) {
+function getFormuleById($formules, $formule_id)
+{
     foreach ($formules as $formule) {
         if ($formule['id'] === $formule_id) {
             return $formule;
@@ -47,7 +48,7 @@ $formuleActive = getFormuleById($formules, $formule_id);
                                 <div class="absolute inset-0 bg-gray-200 opacity-50"></div>
                                 <div class="absolute top-1/2 left-1/2 w-[141%] h-0.5 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
                             </div>
-                            <img src="../Assets/images/<?php echo strtolower($ingredient['ingredient_nom']); ?>_menu.png"
+                            <img src="../Assets/images/<?php echo strtolower($ingredient['ingredient_nom']); ?>_menu.jpg"
                                 alt="<?php echo $ingredientId; ?>"
                                 class="w-32 h-32 object-contain mb-2">
                         </div>

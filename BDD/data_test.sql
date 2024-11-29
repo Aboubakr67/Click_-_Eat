@@ -11,7 +11,7 @@ INSERT INTO users (nom, prenom, role, email, mot_de_passe) VALUES
 INSERT INTO plats (nom, image, prix, type) VALUES
 ('Burger Mixte', 'burger_mixte.jpg', 10.00, 'PLAT'), -- Plat principal dans Menu Classique
 ('Mini-Burger', 'mini_burger.jpg', 7.00, 'PLAT'), -- Plat principal dans Menu Enfant
-('Salade César', 'salade_cesar.jpg', 8.50, 'ENTREE'), -- Entrée pour le Menu Végétarien
+('Salade', 'salade.jpg', 8.50, 'ENTREE'), -- Entrée pour le Menu Végétarien
 ('Steak de Saumon', 'steak_saumon.jpg', 15.00, 'PLAT'), -- Plat principal dans Menu Premium
 ('Fondant au Chocolat', 'fondant_chocolat.jpg', 3.50, 'DESSERT'), -- Dessert dans Menu Classique
 ('Tarte aux Pommes', 'tarte_pommes.jpg', 4.00, 'DESSERT'), -- Dessert dans Menu Gourmet
@@ -19,14 +19,14 @@ INSERT INTO plats (nom, image, prix, type) VALUES
 ('Cheesecake', 'cheesecake.jpg', 4.50, 'DESSERT'), -- Dessert dans Menu Végétarien
 ('Mousse au Chocolat', 'mousse_chocolat.jpg', 5.00, 'DESSERT'), -- Dessert dans Menu Premium
 ('Eau Minérale', 'eau_minerale.jpg', 2.00, 'BOISSON'), -- Boisson dans Menu Classique
-('Soda Cola', 'soda_cola.jpg', 3.00, 'BOISSON'), -- Boisson dans Menu Gourmet
+('Coca', 'coca.jpg', 3.00, 'BOISSON'), -- Boisson dans Menu Gourmet
 ('Jus de Fruits', 'jus_fruits.jpg', 2.50, 'BOISSON'), -- Boisson dans Menu Enfant
 ('Eau Gazeuse', 'eau_gazeuse.jpg', 2.50, 'BOISSON'), -- Boisson dans Menu Végétarien
-('Cocktail Maison', 'cocktail_maison.jpg', 7.00, 'BOISSON'); -- Boisson dans Menu Premium
+('Fanta', 'fanta.jpg', 7.00, 'BOISSON'); -- Boisson dans Menu Premium
 
 -- Insertion des ingrédients dans `ingredients`
 INSERT INTO ingredients (nom, image, quantite, prix_unitaire) VALUES
-('Poulet', 'poulet.jpg', 100, 0.05),
+('Steak', 'steak.jpg', 100, 0.05),
 ('Tomate', 'tomate.jpg', 150, 0.02),
 ('Fromage', 'fromage.jpg', 120, 0.03),
 ('Laitue', 'laitue.jpg', 80, 0.01),

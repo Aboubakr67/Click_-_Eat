@@ -36,8 +36,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         $stmtDeleteFormule->execute();
 
         // Supprimer l'image du dossier (si elle existe)
-        if (file_exists('../Assets/img/formules/' . $formule['image'])) {
-            unlink('../Assets/img/formules/' . $formule['image']);
+        if (file_exists('../Assets/images/formules/' . $formule['image'])) {
+            unlink('../Assets/images/formules/' . $formule['image']);
         }
 
         $_SESSION['success'] = "Formule supprimée avec succès.";

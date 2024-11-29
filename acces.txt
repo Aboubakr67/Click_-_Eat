@@ -8,3 +8,10 @@ password123
 stock :
 mc@gmail.com
 password123
+
+Mot de passe secret acces vps
+3k7kzP4jC5v4
+
+changer en :
+password123
+

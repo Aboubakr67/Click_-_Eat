@@ -60,7 +60,7 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
                     const cellImage = document.createElement('td');
                     cellImage.className = 'px-6 py-4 whitespace-nowrap';
                     const img = document.createElement('img');
-                    img.src = `../Assets/img/ingredients/${ingredient.image}`;
+                    img.src = `../Assets/images/ingredients/${ingredient.image}`;
                     img.alt = ingredient.nom;
                     img.className = 'w-12 h-12 object-cover rounded';
                     cellImage.appendChild(img);

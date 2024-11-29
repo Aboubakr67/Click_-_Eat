@@ -122,7 +122,7 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
             tr.appendChild(tdPrixUnitaire);
 
             if (!isQuantityValid || !isPriceValid) {
-                tr.classList.add('bg-orange-50');
+                tr.classList.add('bg-orange-500');
             } else {
                 checkIngredient(nom, tr);
             }
@@ -138,9 +138,9 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
             .then(response => response.json())
             .then(data => {
                 if (data.exists) {
-                    row.classList.add('bg-green-50');
+                    row.classList.add('bg-green-500');
                 } else {
-                    row.classList.add('bg-red-50');
+                    row.classList.add('bg-red-500');
                 }
             });
     }
@@ -151,7 +151,7 @@ if (!isset($_SESSION['auth']) || $_SESSION['role'] !== 'ZONE STOCK') {
             const isQuantityValid = Number.isInteger(Number(row[1]));
             const isPriceValid = !isNaN(parseFloat(row[2])) && isFinite(row[2]);
 
-            return rowElement.classList.contains('bg-green-50') && isQuantityValid && isPriceValid;
+            return rowElement.classList.contains('bg-green-500') && isQuantityValid && isPriceValid;
         });
 
         if (validData.length === 0) {

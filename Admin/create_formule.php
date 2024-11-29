@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
 
         if (getAndVerify("." . $imageExt, $imageMimeType)) {
             $newImageName = uniqid() . '.' . $imageExt;
-            $imagePath = '../Assets/img/formules/' . $newImageName;
+            $imagePath = '../Assets/images/formules/' . $newImageName;
             move_uploaded_file($imageTmpName, $imagePath);
             $image = $newImageName;
         } else {

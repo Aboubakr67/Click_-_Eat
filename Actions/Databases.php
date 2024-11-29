@@ -4,9 +4,9 @@ function connexion()
 {
     $serveur = 'localhost';
     $utilisateur = 'root';
-    $mot_de_passe = '';
+    $mot_de_passe = 'root';
     $bdd = 'click_and_eat';
-    $port = 3306; // a changer
+    $port = 3308; // a changer
 
     try {
 

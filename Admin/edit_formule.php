@@ -94,11 +94,11 @@ if (isset($_POST['submit'])) {
         if (getAndVerify("." . $imageExt, $imageMimeType)) {
             // L'image est valide, on génère un nouveau nom pour éviter les conflits
             $newImageName = uniqid() . '.' . $imageExt;
-            $imagePath = '../Assets/img/formules/' . $newImageName;
+            $imagePath = '../Assets/images/formules/' . $newImageName;
 
             // Supprimer l'ancienne image
-            if (file_exists('../Assets/img/formules/' . $formule['image'])) {
-                unlink('../Assets/img/formules/' . $formule['image']);
+            if (file_exists('../Assets/images/formules/' . $formule['image'])) {
+                unlink('../Assets/images/formules/' . $formule['image']);
             }
 
             // Déplacer l'image vers le dossier de destination
@@ -196,7 +196,7 @@ if (isset($_POST['submit'])) {
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image de la Formule</label>
                     <div class="flex items-center space-x-4">
                         <?php if ($formule['image']): ?>
-                            <img src="../Assets/img/formules/<?php echo $formule['image']; ?>"
+                            <img src="../Assets/images/formules/<?php echo $formule['image']; ?>"
                                 alt="Image actuelle"
                                 class="w-24 h-24 object-cover rounded-lg">
                         <?php endif; ?>

@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
         if (getAndVerify("." . $imageExt, $imageMimeType)) {
             // L'image est valide, on génère un nouveau nom pour éviter les conflits
             $newImageName = uniqid() . '.' . $imageExt;
-            $imagePath = '../Assets/img/' . $newImageName;
+            $imagePath = '../Assets/images/' . $newImageName;
 
             // Déplacer l'image vers le dossier de destination
             move_uploaded_file($imageTmpName, $imagePath);
@@ -173,7 +173,7 @@ if (isset($_POST['submit'])) {
                         foreach ($ingredients as $ingredient):
                         ?>
                             <div class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-                                <img src="../Assets/img/ingredients/<?php echo $ingredient['image']; ?>"
+                                <img src="../Assets/images/ingredients/<?php echo $ingredient['image']; ?>"
                                     alt="<?php echo htmlspecialchars($ingredient['nom']); ?>"
                                     class="w-12 h-12 object-cover rounded">
                                 <div class="flex items-center">

@@ -55,7 +55,7 @@ $plats = getPlats();
                     <?php foreach ($plats as $plat): ?>
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4">
-                                <img src="../Assets/img/<?= htmlspecialchars($plat->getImage()) ?>" alt="Image du plat" class="w-16 h-16 object-cover rounded-lg">
+                                <img src="../Assets/images/<?= htmlspecialchars($plat->getImage()) ?>" alt="Image du plat" class="w-16 h-16 object-cover rounded-lg">
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">

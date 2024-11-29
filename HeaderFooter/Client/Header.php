@@ -42,8 +42,8 @@ session_start();
                 <span>Boisson</span>
             </a>
 
-            <a href="../../Client/desserts.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
-                <img src="../../Assets/images/cheesecake.jpg" alt="Dessert" class="w-12 h-12 mb-2 object-cover rounded-full">
+            <a href="../Client/desserts.php" class="flex flex-col items-center text-gray-600 hover:text-gray-900">
+                <img src="../Assets/images/cheesecake.jpg" alt="Dessert" class="w-12 h-12 mb-2 object-cover rounded-full">
                 <span>Dessert</span>
             </a>
         </nav>

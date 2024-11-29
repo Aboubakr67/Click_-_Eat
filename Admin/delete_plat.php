@@ -65,8 +65,8 @@ try {
     $deleteStmt->bindParam(':plat_id', $platId, PDO::PARAM_INT);
     $deleteStmt->execute();
 
-    // Suppression de l'image associée au plat dans le dossier Assets/img/
-    $imagePath = '../Assets/img/' . $platImage;
+    // Suppression de l'image associée au plat dans le dossier Assets/images/
+    $imagePath = '../Assets/images/' . $platImage;
     if (file_exists($imagePath)) {
         unlink($imagePath); // Supprimer l'image
     }

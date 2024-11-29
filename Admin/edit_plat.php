@@ -55,14 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // var_dump("ACCEPTER");
             // Supprimer l'ancienne image du dossier
-            $oldImagePath = '../Assets/img/' . $plat['image'];
+            $oldImagePath = '../Assets/images/' . $plat['image'];
             if (file_exists($oldImagePath)) {
                 unlink($oldImagePath);
             }
 
             // Renommer et déplacer la nouvelle image
             $newImageName = $plat['image']; // Utiliser le nom actuel du plat
-            $newImagePath = '../Assets/img/' . $newImageName;
+            $newImagePath = '../Assets/images/' . $newImageName;
 
             if (move_uploaded_file($file['tmp_name'], $newImagePath)) {
                 $image = $newImageName;
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $checked = in_array($ingredient['id'], $platIngredients) ? 'checked' : '';
                         ?>
                             <div class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
-                                <img src="../Assets/img/ingredients/<?php echo $ingredient['image']; ?>"
+                                <img src="../Assets/images/ingredients/<?php echo $ingredient['image']; ?>"
                                     alt="<?php echo htmlspecialchars($ingredient['nom']); ?>"
                                     class="w-12 h-12 object-cover rounded">
                                 <div class="flex items-center">
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
                     <div class="flex items-center space-x-4">
                         <?php if (!empty($plat['image'])): ?>
-                            <img src="../Assets/img/<?php echo $plat['image']; ?>"
+                            <img src="../Assets/images/<?php echo $plat['image']; ?>"
                                 alt="Image actuelle"
                                 class="w-24 h-24 object-cover rounded-lg">
                         <?php endif; ?>
