@@ -1,4 +1,5 @@
 <?php
+ob_start();
 date_default_timezone_set('Europe/Paris');
 session_start();
 
@@ -23,7 +24,7 @@ if (!isset($_SESSION['auth']) && basename($_SERVER['PHP_SELF']) !== 'connexion.p
         <div class="w-[200px] h-screen bg-[#FFF1F1] fixed left-0 top-0">
             <div class="p-4">
                 <img src="../Assets/images/logo_fast_food.png" alt="Click & Eat" class="w-24 mb-12">
-                
+
                 <ul class="space-y-6">
                     <?php if ($_SESSION['role'] === 'ZONE CUISINE'): ?>
                         <li>
@@ -81,10 +82,10 @@ if (!isset($_SESSION['auth']) && basename($_SERVER['PHP_SELF']) !== 'connexion.p
                     <span class="text-gray-600">
                         <?php echo $_SESSION['nom'] . ' ' . $_SESSION['prenom']; ?>
                     </span>
-                    <a href="../Actions/Deconnexion.php" 
-                       class="px-4 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
+                    <a href="../Actions/Deconnexion.php"
+                        class="px-4 py-2 bg-gradient-to-br from-[#FF8A65] to-[#FF5722] text-white rounded-lg hover:from-[#FF7043] hover:to-[#F4511E] transition-all duration-300">
                         Déconnexion
                     </a>
                 </div>
             </div>
-    <?php endif; ?>
+        <?php endif; ?>

@@ -26,7 +26,7 @@ if (isset($_POST['validate'])) {
 
         $con = connexion();
 
-        $stmt = $con->prepare("SELECT * FROM USERS WHERE email = :email AND role = :role");
+        $stmt = $con->prepare("SELECT * FROM users WHERE email = :email AND role = :role");
         $stmt->execute(['email' => $email, 'role' => $role]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

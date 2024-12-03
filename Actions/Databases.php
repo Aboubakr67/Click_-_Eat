@@ -2,11 +2,11 @@
 
 function connexion()
 {
-    $serveur = 'localhost';
+    $serveur = 'mysql-db';
     $utilisateur = 'root';
     $mot_de_passe = 'root';
     $bdd = 'click_and_eat';
-    $port = 3308; // a changer
+    $port = 3306; // a changer
 
     try {
 
